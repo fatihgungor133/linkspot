@@ -35,14 +35,32 @@ try {
         throw new Exception('Dosya boyutu 5MB\'dan büyük olamaz.');
     }
 
+    // Uploads klasörünü kontrol et ve oluştur
+    $uploads_dir = '../uploads';
+    $profiles_dir = $uploads_dir . '/profiles';
+    
+    if (!file_exists($uploads_dir)) {
+        if (!mkdir($uploads_dir, 0777, true)) {
+            throw new Exception('Uploads klasörü oluşturulamadı.');
+        }
+        chmod($uploads_dir, 0777);
+    }
+    
+    if (!file_exists($profiles_dir)) {
+        if (!mkdir($profiles_dir, 0777, true)) {
+            throw new Exception('Profiles klasörü oluşturulamadı.');
+        }
+        chmod($profiles_dir, 0777);
+    }
+
     // Yeni dosya adı oluştur
     $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $new_filename = uniqid('profile_') . '.' . $extension;
-    $upload_path = '../uploads/profiles/' . $new_filename;
+    $upload_path = $profiles_dir . '/' . $new_filename;
     
     // Dosyayı yükle
     if (!move_uploaded_file($file['tmp_name'], $upload_path)) {
-        throw new Exception('Dosya yüklenirken bir hata oluştu.');
+        throw new Exception('Dosya yüklenirken bir hata oluştu: ' . error_get_last()['message']);
     }
 
     // Eski profil resmini bul
@@ -72,9 +90,10 @@ try {
     ]);
 
 } catch (Exception $e) {
-    http_response_code(400);
+    error_log('Profil resmi yükleme hatası: ' . $e->getMessage());
+    http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => $e->getMessage()
+        'message' => 'Profil resmi yüklenirken bir hata oluştu: ' . $e->getMessage()
     ]);
 } 
