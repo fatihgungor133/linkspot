@@ -136,11 +136,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         <form method="POST" enctype="multipart/form-data">
                             <div class="text-center mb-4">
-                                <img src="<?php echo $user['profile_image'] ? '../' . $user['profile_image'] : 'https://via.placeholder.com/150' ?>" 
-                                     class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
-                                <div class="mb-3">
-                                    <label for="profile_image" class="form-label">Profil Fotoğrafı</label>
-                                    <input type="file" class="form-control" id="profile_image" name="profile_image" accept="image/*">
+                                <div class="position-relative d-inline-block">
+                                    <img src="<?php echo $user['profile_image'] ? '../' . $user['profile_image'] : 'https://via.placeholder.com/150' ?>" 
+                                         class="rounded-circle mb-3" 
+                                         id="profileImage"
+                                         style="width: 150px; height: 150px; object-fit: cover;">
+                                    <label for="profile_image" class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-2" style="cursor: pointer;">
+                                        <i class="bi bi-camera"></i>
+                                    </label>
+                                    <input type="file" 
+                                           class="d-none" 
+                                           id="profile_image" 
+                                           name="profile_image" 
+                                           accept="image/jpeg,image/png,image/gif"
+                                           onchange="uploadProfileImage(this)">
                                 </div>
                             </div>
 
@@ -174,5 +183,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    function uploadProfileImage(input) {
+        if (input.files && input.files[0]) {
+            const formData = new FormData();
+            formData.append('profile_image', input.files[0]);
+
+            fetch('upload_profile_image.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Profil resmini güncelle
+                    document.getElementById('profileImage').src = '../' + data.profile_image;
+                    showAlert('success', data.message);
+                } else {
+                    showAlert('danger', data.message);
+                }
+            })
+            .catch(error => {
+                showAlert('danger', 'Bir hata oluştu. Lütfen tekrar deneyin.');
+                console.error('Error:', error);
+            });
+        }
+    }
+
+    function showAlert(type, message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        const container = document.querySelector('.container');
+        container.insertBefore(alertDiv, container.firstChild);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 3000);
+    }
+    </script>
 </body>
 </html> 
