@@ -1,0 +1,12 @@
+RewriteEngine On
+RewriteBase /
+
+# Profil sayfası yönlendirmesi
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ profile.php?username=$1 [L,QSA]
+
+# Diğer dosyaları ve dizinleri koru
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L,QSA] 
