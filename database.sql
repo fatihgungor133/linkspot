@@ -1,8 +1,3 @@
--- Veritabanını oluştur
-CREATE DATABASE IF NOT EXISTS linkspot CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-USE linkspot;
-
 -- Kullanıcılar tablosu
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
