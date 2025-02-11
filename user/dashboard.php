@@ -353,13 +353,27 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     // Yeni linki listeye ekle
                     const linksList = document.querySelector('.list-group');
+                    const emptyMessage = document.querySelector('.text-center.text-muted');
+                    if (emptyMessage) {
+                        emptyMessage.remove();
+                    }
+                    
                     const newLink = createLinkElement(data.link);
-                    linksList.insertBefore(newLink, linksList.firstChild);
+                    if (linksList.children.length === 0) {
+                        linksList.appendChild(newLink);
+                    } else {
+                        linksList.insertBefore(newLink, linksList.firstChild);
+                    }
                     
                     // Formu temizle ve modalı kapat
                     this.reset();
@@ -372,12 +386,50 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     updateLinkCount();
                 } else {
                     showAlert('danger', data.message);
+                    console.error('Link ekleme hatası:', data);
                 }
             })
             .catch(error => {
                 showAlert('danger', 'Bir hata oluştu. Lütfen tekrar deneyin.');
+                console.error('Link ekleme hatası:', error);
             });
         });
+
+        function createLinkElement(link) {
+            const div = document.createElement('div');
+            div.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center';
+            div.dataset.linkId = link.id;
+            div.dataset.active = link.is_active || 1;
+            
+            div.innerHTML = `
+                <div>
+                    <i class="bi bi-${link.icon || 'link'}"></i>
+                    <span class="ms-2 link-title">${link.title}</span>
+                    <span class="link-url" data-url="${link.url}" style="display: none;"></span>
+                </div>
+                <div>
+                    <a href="${link.url}" target="_blank" class="btn btn-sm btn-outline-secondary me-1">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editLink(${link.id})">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteLink(${link.id})">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            return div;
+        }
+
+        function updateLinkCount() {
+            const totalLinks = document.querySelectorAll('[data-link-id]').length;
+            document.querySelector('p.mb-2:first-child').textContent = `Toplam Link: ${totalLinks}`;
+            
+            const activeLinks = document.querySelectorAll('[data-link-id][data-active="1"]').length;
+            document.querySelector('p.mb-2:nth-child(2)').textContent = `Aktif Link: ${activeLinks}`;
+        }
 
         // Yardımcı fonksiyonlar
         function showAlert(type, message) {
@@ -395,39 +447,6 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
             setTimeout(() => {
                 alertDiv.remove();
             }, 3000);
-        }
-
-        function createLinkElement(link) {
-            const div = document.createElement('div');
-            div.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center';
-            div.dataset.linkId = link.id;
-            div.dataset.active = link.is_active;
-            
-            div.innerHTML = `
-                <div>
-                    <i class="bi bi-${link.icon || 'link'}"></i>
-                    <span class="ms-2 link-title">${link.title}</span>
-                    <span class="link-url" data-url="${link.url}" style="display: none;"></span>
-                </div>
-                <div>
-                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editLink(${link.id})">
-                        <i class="bi bi-pencil"></i>
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="deleteLink(${link.id})">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </div>
-            `;
-            
-            return div;
-        }
-
-        function updateLinkCount() {
-            const totalLinks = document.querySelectorAll('[data-link-id]').length;
-            const activeLinks = document.querySelectorAll('[data-link-id][data-active="1"]').length;
-            
-            document.getElementById('totalLinks').textContent = totalLinks;
-            document.getElementById('activeLinks').textContent = activeLinks;
         }
     </script>
 </body>
