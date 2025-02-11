@@ -2,11 +2,23 @@
 require_once 'config/database.php';
 
 // URL'den kullanıcı adını al
-$request_uri = $_SERVER['REQUEST_URI'];
-$path = parse_url($request_uri, PHP_URL_PATH);
-$username = trim(str_replace('/', '', $path));
+$username = isset($_GET['username']) ? trim($_GET['username']) : '';
+
+// Eğer URL'den alınamadıysa, path'den almayı dene
+if (empty($username)) {
+    $request_uri = $_SERVER['REQUEST_URI'];
+    $path = parse_url($request_uri, PHP_URL_PATH);
+    $username = trim(ltrim($path, '/'));
+}
 
 if (empty($username)) {
+    header("Location: /");
+    exit;
+}
+
+// Admin, user, assets gibi sistem klasörlerini kontrol et
+$system_folders = ['admin', 'user', 'assets', 'uploads'];
+if (in_array(strtolower($username), $system_folders)) {
     header("Location: /");
     exit;
 }

@@ -1,9 +1,15 @@
 RewriteEngine On
 RewriteBase /
 
-# Profil sayfası yönlendirmesi
+# Admin, user ve assets klasörlerine erişime izin ver
+RewriteRule ^(admin|user|assets|uploads)($|/) - [L]
+
+# PHP dosyalarına doğrudan erişime izin ver
+RewriteCond %{REQUEST_FILENAME} !\.php$
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+
+# Kullanıcı profil sayfası yönlendirmesi
 RewriteRule ^([a-zA-Z0-9_-]+)/?$ profile.php?username=$1 [L,QSA]
 
 # Diğer dosyaları ve dizinleri koru
