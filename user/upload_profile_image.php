@@ -32,16 +32,14 @@ try {
 
     $file = $_FILES['profile_image'];
     
-    // Dosya türünü kontrol et
-    $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
-    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    $mime_type = finfo_file($finfo, $file['tmp_name']);
-    finfo_close($finfo);
+    // Dosya uzantısını kontrol et
+    $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+    $file_extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     
-    error_log('Dosya MIME türü: ' . $mime_type);
+    error_log('Dosya uzantısı: ' . $file_extension);
     
-    if (!in_array($mime_type, $allowed_types)) {
-        throw new Exception('Sadece JPG, PNG ve GIF dosyaları yüklenebilir. Gönderilen dosya türü: ' . $mime_type);
+    if (!in_array($file_extension, $allowed_extensions)) {
+        throw new Exception('Sadece JPG, PNG ve GIF dosyaları yüklenebilir. Gönderilen dosya uzantısı: ' . $file_extension);
     }
 
     // Dosya boyutunu kontrol et (max 5MB)
@@ -78,8 +76,7 @@ try {
     }
 
     // Yeni dosya adı oluştur
-    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $new_filename = uniqid('profile_') . '.' . $extension;
+    $new_filename = uniqid('profile_') . '.' . $file_extension;
     $upload_path = $profiles_dir . '/' . $new_filename;
     
     error_log('Yükleme yolu: ' . $upload_path);
