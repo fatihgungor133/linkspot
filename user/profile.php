@@ -155,6 +155,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <link href="../assets/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .social-profile-item {
+            cursor: move;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: background-color 0.2s;
+        }
+        .social-profile-item:hover {
+            background-color: #f8f9fa;
+        }
+        .social-profile-item.sortable-ghost {
+            opacity: 0.5;
+            background-color: #e9ecef;
+        }
+        .social-profile-item .drag-handle {
+            cursor: move;
+            color: #6c757d;
+            margin-right: 0.5rem;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -269,9 +293,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <label class="form-label">Sosyal Medya Profilleri</label>
                                 <div id="socialProfiles">
                                     <?php foreach ($social_profiles as $index => $profile): ?>
-                                    <div class="social-profile-item mb-3">
+                                    <div class="social-profile-item mb-3" data-id="<?php echo $profile['id']; ?>">
                                         <input type="hidden" name="social_profiles[<?php echo $index; ?>][id]" value="<?php echo $profile['id']; ?>">
-                                        <div class="row g-2">
+                                        <div class="row g-2 align-items-center">
+                                            <div class="col-auto">
+                                                <i class="bi bi-grip-vertical drag-handle"></i>
+                                            </div>
                                             <div class="col-md-3">
                                                 <select class="form-select platform-select" name="social_profiles[<?php echo $index; ?>][platform]" required>
                                                     <option value="">Platform Seçin</option>
@@ -323,6 +350,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
     let socialProfileCount = <?php echo count($social_profiles); ?>;
 
@@ -428,6 +456,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         setTimeout(() => {
             alertDiv.remove();
         }, 3000);
+    }
+
+    // Sürükle-bırak sıralama için Sortable.js ayarları
+    const socialProfilesContainer = document.getElementById('socialProfiles');
+    const sortable = new Sortable(socialProfilesContainer, {
+        animation: 150,
+        handle: '.drag-handle',
+        ghostClass: 'sortable-ghost',
+        onEnd: function() {
+            updateSocialProfilesOrder();
+        }
+    });
+
+    function updateSocialProfilesOrder() {
+        const items = socialProfilesContainer.querySelectorAll('.social-profile-item');
+        const order = Array.from(items).map((item, index) => {
+            const idInput = item.querySelector('input[name$="[id]"]');
+            return idInput ? idInput.value : null;
+        }).filter(id => id !== null);
+
+        fetch('update_social_profile_order.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(order)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('success', 'Sıralama güncellendi');
+            } else {
+                showAlert('danger', data.message || 'Sıralama güncellenirken bir hata oluştu');
+            }
+        })
+        .catch(error => {
+            showAlert('danger', 'Sıralama güncellenirken bir hata oluştu');
+            console.error('Error:', error);
+        });
     }
     </script>
 </body>
