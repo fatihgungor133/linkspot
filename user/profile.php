@@ -484,9 +484,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Profil resmini güncelle
-                    document.getElementById('profileImage').src = '../' + data.profile_image;
                     showAlert('success', data.message);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
                 } else {
                     showAlert('danger', data.message);
                 }
@@ -543,6 +544,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .then(data => {
             if (data.success) {
                 showAlert('success', 'Sıralama güncellendi');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             } else {
                 showAlert('danger', data.message || 'Sıralama güncellenirken bir hata oluştu');
             }
@@ -564,7 +568,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                location.reload();
+                showAlert('success', 'Tema başarıyla uygulandı');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             } else {
                 showAlert('danger', data.message || 'Tema uygulanırken bir hata oluştu');
             }

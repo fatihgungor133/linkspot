@@ -329,15 +329,11 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Linki listeden kaldır
-                        const linkElement = document.querySelector(`[data-link-id="${id}"]`);
-                        linkElement.remove();
-                        
-                        // Başarılı mesajı göster
+                        // Başarılı mesajı göster ve sayfayı yenile
                         showAlert('success', data.message);
-                        
-                        // Link sayısını güncelle
-                        updateLinkCount();
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
                     } else {
                         showAlert('danger', data.message);
                     }
@@ -361,18 +357,11 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Link elementini güncelle
-                    const linkElement = document.querySelector(`[data-link-id="${data.link.id}"]`);
-                    linkElement.querySelector('.link-title').textContent = data.link.title;
-                    linkElement.querySelector('.link-url').dataset.url = data.link.url;
-                    linkElement.querySelector('.link-image').src = data.link.image;
-                    linkElement.dataset.active = data.link.is_active;
-                    
-                    // Modalı kapat
-                    bootstrap.Modal.getInstance(document.getElementById('editLinkModal')).hide();
-                    
-                    // Başarılı mesajı göster
+                    // Başarılı mesajı göster ve sayfayı yenile
                     showAlert('success', data.message);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
                 } else {
                     showAlert('danger', data.message);
                 }
@@ -400,32 +389,13 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
             })
             .then(data => {
                 if (data.success) {
-                    // Yeni linki listeye ekle
-                    const linksList = document.querySelector('.list-group');
-                    const emptyMessage = document.querySelector('.text-center.text-muted');
-                    if (emptyMessage) {
-                        emptyMessage.remove();
-                    }
-                    
-                    const newLink = createLinkElement(data.link);
-                    if (linksList.children.length === 0) {
-                        linksList.appendChild(newLink);
-                    } else {
-                        linksList.insertBefore(newLink, linksList.firstChild);
-                    }
-                    
-                    // Formu temizle ve modalı kapat
-                    this.reset();
-                    bootstrap.Modal.getInstance(document.getElementById('addLinkModal')).hide();
-                    
-                    // Başarılı mesajı göster
+                    // Başarılı mesajı göster ve sayfayı yenile
                     showAlert('success', data.message);
-                    
-                    // Link sayısını güncelle
-                    updateLinkCount();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
                 } else {
                     showAlert('danger', data.message);
-                    console.error('Link ekleme hatası:', data);
                 }
             })
             .catch(error => {
@@ -521,6 +491,9 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
             .then(data => {
                 if (data.success) {
                     showAlert('success', 'Sıralama güncellendi');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
                 } else {
                     showAlert('danger', data.message || 'Sıralama güncellenirken bir hata oluştu');
                 }
