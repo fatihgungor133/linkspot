@@ -108,26 +108,26 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         .profile-container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
         .profile-header {
             text-align: center;
             margin-bottom: 2.5rem;
-            padding: 2rem;
+            padding: 2.5rem;
             background: var(--theme-card-bg);
-            border-radius: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
         .profile-image {
-            width: 180px;
-            height: 180px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 1.5rem;
-            border: 4px solid var(--theme-color);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            border: 5px solid var(--theme-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             transition: transform 0.3s ease;
         }
         .profile-image:hover {
@@ -136,18 +136,18 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
         .link-card {
             background: var(--theme-card-bg);
             border: none;
-            border-radius: 15px;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.2rem;
             transition: transform 0.2s, box-shadow 0.2s;
             text-decoration: none;
             color: var(--theme-text);
             display: block;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
         .link-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
         .footer {
             margin-top: auto;
@@ -155,17 +155,17 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             padding: 2rem;
             color: #6c757d;
             background: var(--theme-card-bg);
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.08);
         }
         .share-buttons {
-            margin: 1.5rem 0;
+            margin: 2rem 0;
             display: flex;
             justify-content: center;
-            gap: 0.75rem;
+            gap: 1rem;
         }
         .share-button {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -173,23 +173,23 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             color: #fff;
             text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
         }
         .share-button:hover {
             opacity: 0.9;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             color: #fff;
         }
         .social-buttons {
-            margin: 1.5rem 0;
+            margin: 2rem 0;
             display: flex;
             justify-content: center;
-            gap: 0.75rem;
+            gap: 1rem;
             flex-wrap: wrap;
         }
         .social-button {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -197,60 +197,51 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             color: #fff;
             text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             background-color: var(--theme-color);
         }
         .social-button:hover {
             opacity: 0.9;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             color: #fff;
         }
         .profile-title {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
             color: var(--theme-text);
         }
         .profile-description {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: #6c757d;
-            max-width: 600px;
-            margin: 0 auto 1.5rem;
-            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
         }
         .links-container {
             padding: 0.5rem;
+            max-width: 900px;
+            margin: 0 auto;
         }
         .link-card .link-title {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             font-weight: 500;
         }
         .link-card .link-image {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             object-fit: cover;
-            border-radius: 8px;
-            margin-right: 1rem;
+            border-radius: 10px;
+            margin-right: 1.2rem;
         }
         .link-card .bi {
-            font-size: 1.4rem;
-        }
-        @media (prefers-color-scheme: dark) {
-            body.theme-auto {
-                --theme-bg: #1a1a1a;
-                --theme-text: #ffffff;
-                --theme-card-bg: #2d2d2d;
-            }
-        }
-        body.theme-dark {
-            --theme-bg: #1a1a1a;
-            --theme-text: #ffffff;
-            --theme-card-bg: #2d2d2d;
+            font-size: 1.6rem;
         }
         .link-card-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 0.5rem 1rem;
         }
         .link-card-left {
             display: flex;
@@ -265,8 +256,20 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             opacity: 1;
         }
         .link-card-right .bi {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             color: var(--theme-color);
+        }
+        @media (prefers-color-scheme: dark) {
+            body.theme-auto {
+                --theme-bg: #1a1a1a;
+                --theme-text: #ffffff;
+                --theme-card-bg: #2d2d2d;
+            }
+        }
+        body.theme-dark {
+            --theme-bg: #1a1a1a;
+            --theme-text: #ffffff;
+            --theme-card-bg: #2d2d2d;
         }
     </style>
 </head>
