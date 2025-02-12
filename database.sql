@@ -82,11 +82,11 @@ INSERT INTO themes (name, description, theme_color, theme_bg, theme_text, theme_
 ('Klasik Açık', 'Sade ve şık açık tema', '#007bff', '#f8f9fa', '#212529', '#ffffff', 'light', 0),
 ('Klasik Koyu', 'Modern koyu tema', '#007bff', '#212529', '#f8f9fa', '#343a40', 'dark', 0),
 ('Minimalist', 'Sade ve minimalist tasarım', '#000000', '#ffffff', '#000000', '#f8f9fa', 'light', 0),
-('Neon', 'Canlı ve dikkat çekici neon tema', '#00ff00', '#000000', '#ffffff', '#0a0a0a', 'dark', 1),
-('Pastel', 'Yumuşak pastel renkler', '#ff9999', '#fff5f5', '#4a4a4a', '#ffffff', 'light', 1),
-('Okyanus', 'Ferah mavi tonları', '#0066cc', '#e6f3ff', '#003366', '#ffffff', 'light', 1),
-('Gece Modu', 'Göz yormayan koyu tema', '#9966ff', '#1a1a1a', '#e6e6e6', '#2d2d2d', 'dark', 1),
-('Sonbahar', 'Sıcak sonbahar renkleri', '#ff6600', '#fff9f2', '#663300', '#ffffff', 'light', 1);
+('Neon', 'Canlı ve dikkat çekici neon tema', '#00ff00', '#000000', '#ffffff', '#0a0a0a', 'dark', 0),
+('Pastel', 'Yumuşak pastel renkler', '#ff9999', '#fff5f5', '#4a4a4a', '#ffffff', 'light', 0),
+('Okyanus', 'Ferah mavi tonları', '#0066cc', '#e6f3ff', '#003366', '#ffffff', 'light', 0),
+('Gece Modu', 'Göz yormayan koyu tema', '#9966ff', '#1a1a1a', '#e6e6e6', '#2d2d2d', 'dark', 0),
+('Sonbahar', 'Sıcak sonbahar renkleri', '#ff6600', '#fff9f2', '#663300', '#ffffff', 'light', 0);
 
 -- Admin kullanıcısı oluştur (şifre: admin123)
 INSERT INTO users (username, email, password, is_admin) VALUES 
