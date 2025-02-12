@@ -101,6 +101,12 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                              style="width: 100px; height: 100px; object-fit: cover;">
                         <h5 class="card-title"><?php echo htmlspecialchars($user['username']); ?></h5>
                         <p class="card-text"><?php echo htmlspecialchars($user['profile_title'] ?? ''); ?></p>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="profileUrl" value="<?php echo 'https://' . $_SERVER['HTTP_HOST'] . '/' . htmlspecialchars($user['username']); ?>" readonly>
+                            <button class="btn btn-outline-primary" type="button" onclick="copyProfileUrl()">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
                         <a href="profile.php" class="btn btn-sm btn-outline-primary">Profili Düzenle</a>
                     </div>
                 </div>
@@ -503,6 +509,26 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 showAlert('danger', 'Sıralama güncellenirken bir hata oluştu');
                 console.error('Error:', error);
             });
+        }
+
+        function copyProfileUrl() {
+            var copyText = document.getElementById("profileUrl");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            
+            // Kopyalama başarılı bildirimi
+            var button = event.currentTarget;
+            var originalHtml = button.innerHTML;
+            button.innerHTML = '<i class="bi bi-check"></i>';
+            button.classList.remove('btn-outline-primary');
+            button.classList.add('btn-success');
+            
+            setTimeout(function() {
+                button.innerHTML = originalHtml;
+                button.classList.remove('btn-success');
+                button.classList.add('btn-outline-primary');
+            }, 2000);
         }
     </script>
 </body>
