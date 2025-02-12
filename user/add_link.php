@@ -20,8 +20,7 @@ try {
     $user_id = $_SESSION['user_id'];
     $title = trim($_POST['title'] ?? '');
     $url = trim($_POST['url'] ?? '');
-    $icon = trim($_POST['icon'] ?? '');
-
+    
     // Validasyon
     if (empty($title)) {
         echo json_encode(['success' => false, 'message' => 'Başlık alanı zorunludur.']);
@@ -38,6 +37,39 @@ try {
         exit;
     }
 
+    // Görsel yükleme işlemi
+    $image_path = null;
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+        $filename = $_FILES['image']['name'];
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        
+        if (!in_array($ext, $allowed)) {
+            echo json_encode(['success' => false, 'message' => 'Sadece JPG, PNG ve GIF dosyaları yüklenebilir.']);
+            exit;
+        }
+
+        // Dosya boyutunu kontrol et (max 2MB)
+        if ($_FILES['image']['size'] > 2 * 1024 * 1024) {
+            echo json_encode(['success' => false, 'message' => 'Dosya boyutu 2MB\'dan büyük olamaz.']);
+            exit;
+        }
+
+        // Uploads klasörünü kontrol et ve oluştur
+        $uploads_dir = '../uploads/links';
+        if (!file_exists($uploads_dir)) {
+            mkdir($uploads_dir, 0777, true);
+        }
+
+        // Benzersiz dosya adı oluştur
+        $new_filename = uniqid('link_') . '.' . $ext;
+        $upload_path = $uploads_dir . '/' . $new_filename;
+        
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
+            $image_path = 'uploads/links/' . $new_filename;
+        }
+    }
+
     // Mevcut en yüksek sıra numarasını bul
     $order_query = "SELECT COALESCE(MAX(order_number), 0) as max_order FROM links WHERE user_id = ?";
     $stmt = $db->prepare($order_query);
@@ -46,9 +78,9 @@ try {
     $next_order = $result['max_order'] + 1;
 
     // Yeni linki ekle
-    $insert_query = "INSERT INTO links (user_id, title, url, icon, order_number, is_active) VALUES (?, ?, ?, ?, ?, 1)";
+    $insert_query = "INSERT INTO links (user_id, title, url, image, order_number, is_active) VALUES (?, ?, ?, ?, ?, 1)";
     $stmt = $db->prepare($insert_query);
-    $stmt->execute([$user_id, $title, $url, $icon, $next_order]);
+    $stmt->execute([$user_id, $title, $url, $image_path, $next_order]);
 
     $link_id = $db->lastInsertId();
 

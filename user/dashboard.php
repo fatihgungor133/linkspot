@@ -138,7 +138,11 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                          data-active="<?php echo $link['is_active']; ?>">
                                         <div>
                                             <i class="bi bi-grip-vertical drag-handle"></i>
-                                            <i class="bi bi-<?php echo htmlspecialchars($link['icon'] ?? 'link'); ?>"></i>
+                                            <?php if (!empty($link['image'])): ?>
+                                                <img src="<?php echo htmlspecialchars($link['image']); ?>" class="link-image me-2" alt="" style="width: 24px; height: 24px; object-fit: cover; border-radius: 4px;">
+                                            <?php else: ?>
+                                                <i class="bi bi-link me-2"></i>
+                                            <?php endif; ?>
                                             <span class="ms-2 link-title"><?php echo htmlspecialchars($link['title']); ?></span>
                                             <span class="link-url" data-url="<?php echo htmlspecialchars($link['url']); ?>" style="display: none;"></span>
                                             <?php if (!$link['is_active']): ?>
@@ -186,7 +190,7 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="addLinkForm" action="add_link.php" method="POST">
+                    <form id="addLinkForm" action="add_link.php" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="title" class="form-label">Başlık</label>
                             <input type="text" class="form-control" id="title" name="title" required>
@@ -196,8 +200,9 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <input type="url" class="form-control" id="url" name="url" required>
                         </div>
                         <div class="mb-3">
-                            <label for="icon" class="form-label">İkon (Bootstrap Icons)</label>
-                            <input type="text" class="form-control" id="icon" name="icon" placeholder="örn: facebook">
+                            <label for="image" class="form-label">Görsel</label>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            <small class="text-muted">Önerilen boyut: 100x100 piksel</small>
                         </div>
                     </form>
                 </div>
@@ -218,7 +223,7 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editLinkForm" action="edit_link.php" method="POST">
+                    <form id="editLinkForm" action="edit_link.php" method="POST" enctype="multipart/form-data">
                         <input type="hidden" id="editLinkId" name="link_id">
                         <div class="mb-3">
                             <label for="editTitle" class="form-label">Başlık</label>
@@ -229,8 +234,12 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <input type="url" class="form-control" id="editUrl" name="url" required>
                         </div>
                         <div class="mb-3">
-                            <label for="editIcon" class="form-label">İkon (Bootstrap Icons)</label>
-                            <input type="text" class="form-control" id="editIcon" name="icon" placeholder="örn: facebook">
+                            <label for="editImage" class="form-label">Görsel</label>
+                            <input type="file" class="form-control" id="editImage" name="image" accept="image/*">
+                            <small class="text-muted">Önerilen boyut: 100x100 piksel</small>
+                            <div id="currentImage" class="mt-2" style="display: none;">
+                                <img src="" alt="Mevcut görsel" style="max-width: 100px; max-height: 100px;">
+                            </div>
                         </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="editIsActive" name="is_active" value="1">
@@ -283,15 +292,24 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
             const linkElement = document.querySelector(`[data-link-id="${id}"]`);
             const title = linkElement.querySelector('.link-title').textContent;
             const url = linkElement.querySelector('.link-url').dataset.url;
-            const icon = linkElement.querySelector('.bi').className.replace('bi bi-', '');
             const isActive = linkElement.dataset.active === '1';
+            const image = linkElement.querySelector('.link-image')?.src;
 
             // Modal içeriğini güncelle
             document.getElementById('editLinkId').value = id;
             document.getElementById('editTitle').value = title;
             document.getElementById('editUrl').value = url;
-            document.getElementById('editIcon').value = icon;
             document.getElementById('editIsActive').checked = isActive;
+
+            // Mevcut görseli göster
+            const currentImageDiv = document.getElementById('currentImage');
+            const currentImageImg = currentImageDiv.querySelector('img');
+            if (image) {
+                currentImageImg.src = image;
+                currentImageDiv.style.display = 'block';
+            } else {
+                currentImageDiv.style.display = 'none';
+            }
 
             // Modalı aç
             const editModal = new bootstrap.Modal(document.getElementById('editLinkModal'));
@@ -347,7 +365,7 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     const linkElement = document.querySelector(`[data-link-id="${data.link.id}"]`);
                     linkElement.querySelector('.link-title').textContent = data.link.title;
                     linkElement.querySelector('.link-url').dataset.url = data.link.url;
-                    linkElement.querySelector('.bi').className = `bi bi-${data.link.icon || 'link'}`;
+                    linkElement.querySelector('.link-image').src = data.link.image;
                     linkElement.dataset.active = data.link.is_active;
                     
                     // Modalı kapat
@@ -424,8 +442,13 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             div.innerHTML = `
                 <div>
-                    <i class="bi bi-${link.icon || 'link'}"></i>
-                    <span class="ms-2 link-title">${link.title}</span>
+                    <i class="bi bi-grip-vertical drag-handle"></i>
+                    <?php if (!empty($link['image'])): ?>
+                        <img src="<?php echo htmlspecialchars($link['image']); ?>" class="link-image me-2" alt="" style="width: 24px; height: 24px; object-fit: cover; border-radius: 4px;">
+                    <?php else: ?>
+                        <i class="bi bi-link me-2"></i>
+                    <?php endif; ?>
+                    <span class="link-title">${link.title}</span>
                     <span class="link-url" data-url="${link.url}" style="display: none;"></span>
                 </div>
                 <div>

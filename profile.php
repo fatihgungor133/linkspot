@@ -246,8 +246,14 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
                    class="link-card" 
                    onclick="recordClick(<?php echo $link['id']; ?>)">
                     <div class="d-flex align-items-center">
-                        <i class="bi bi-<?php echo htmlspecialchars($link['icon'] ?? 'link'); ?> me-3" 
-                           style="font-size: 1.5rem; color: var(--theme-color);"></i>
+                        <?php if (!empty($link['image'])): ?>
+                            <img src="<?php echo htmlspecialchars($link['image']); ?>" 
+                                 alt="" 
+                                 class="me-3"
+                                 style="width: 32px; height: 32px; object-fit: cover; border-radius: 6px;">
+                        <?php else: ?>
+                            <i class="bi bi-link me-3" style="font-size: 1.5rem; color: var(--theme-color);"></i>
+                        <?php endif; ?>
                         <span><?php echo htmlspecialchars($link['title']); ?></span>
                     </div>
                 </a>
