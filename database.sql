@@ -184,7 +184,16 @@ INSERT INTO language_strings (language_id, string_key, string_value) VALUES
 ((SELECT id FROM languages WHERE code = 'en'), 'pixels', 'pixels'),
 ((SELECT id FROM languages WHERE code = 'en'), 'current_image', 'Current image'),
 ((SELECT id FROM languages WHERE code = 'en'), 'add', 'Add'),
-((SELECT id FROM languages WHERE code = 'en'), 'visit_stats', 'Last 7 Days Visit Statistics');
+((SELECT id FROM languages WHERE code = 'en'), 'visit_stats', 'Last 7 Days Visit Statistics'),
+((SELECT id FROM languages WHERE code = 'en'), 'profile_update_success', 'Profile updated successfully.'),
+((SELECT id FROM languages WHERE code = 'en'), 'profile_update_error', 'An error occurred while updating the profile.'),
+((SELECT id FROM languages WHERE code = 'en'), 'change_profile_image', 'Change Profile Image'),
+((SELECT id FROM languages WHERE code = 'en'), 'selected', 'Selected'),
+((SELECT id FROM languages WHERE code = 'en'), 'upgrade_to_premium', 'Upgrade to Premium'),
+((SELECT id FROM languages WHERE code = 'en'), 'apply_theme', 'Apply Theme'),
+((SELECT id FROM languages WHERE code = 'en'), 'theme_apply_error', 'An error occurred while applying the theme.'),
+((SELECT id FROM languages WHERE code = 'en'), 'premium_feature_alert', 'This feature is only available for premium users.'),
+((SELECT id FROM languages WHERE code = 'en'), 'upload_error', 'An error occurred. Please try again.');
 
 -- Türkçe metinler
 INSERT INTO language_strings (language_id, string_key, string_value) VALUES
@@ -252,7 +261,16 @@ INSERT INTO language_strings (language_id, string_key, string_value) VALUES
 ((SELECT id FROM languages WHERE code = 'tr'), 'pixels', 'piksel'),
 ((SELECT id FROM languages WHERE code = 'tr'), 'current_image', 'Mevcut görsel'),
 ((SELECT id FROM languages WHERE code = 'tr'), 'add', 'Ekle'),
-((SELECT id FROM languages WHERE code = 'tr'), 'visit_stats', 'Son 7 Gün Ziyaret İstatistikleri');
+((SELECT id FROM languages WHERE code = 'tr'), 'visit_stats', 'Son 7 Gün Ziyaret İstatistikleri'),
+((SELECT id FROM languages WHERE code = 'tr'), 'profile_update_success', 'Profil başarıyla güncellendi.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'profile_update_error', 'Profil güncellenirken bir hata oluştu.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'change_profile_image', 'Profil Resmini Değiştir'),
+((SELECT id FROM languages WHERE code = 'tr'), 'selected', 'Seçili'),
+((SELECT id FROM languages WHERE code = 'tr'), 'upgrade_to_premium', 'Premium\'a Yükselt'),
+((SELECT id FROM languages WHERE code = 'tr'), 'apply_theme', 'Temayı Uygula'),
+((SELECT id FROM languages WHERE code = 'tr'), 'theme_apply_error', 'Tema uygulanırken bir hata oluştu.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'premium_feature_alert', 'Bu özellik sadece premium kullanıcılar için kullanılabilir.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'upload_error', 'Bir hata oluştu. Lütfen tekrar deneyin.');
 
 -- Admin kullanıcısı oluştur (şifre: admin123)
 INSERT INTO users (username, email, password, is_admin) VALUES 

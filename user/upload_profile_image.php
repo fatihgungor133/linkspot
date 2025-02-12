@@ -5,6 +5,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once '../config/database.php';
+require_once '../includes/language.php';
 session_start();
 
 header('Content-Type: application/json');
@@ -12,7 +13,7 @@ header('Content-Type: application/json');
 // Oturum kontrolü
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Oturum açmanız gerekiyor.']);
+    echo json_encode(['success' => false, 'message' => __('session_required')]);
     exit;
 }
 
@@ -25,26 +26,27 @@ try {
 
     if (!isset($_FILES['profile_image']) || $_FILES['profile_image']['error'] !== UPLOAD_ERR_OK) {
         $error_message = isset($_FILES['profile_image']) ? 
-            'Yükleme hatası kodu: ' . $_FILES['profile_image']['error'] : 
-            'Dosya gönderilmedi';
-        throw new Exception('Dosya yükleme hatası: ' . $error_message);
+            __('upload_error_code') . ': ' . $_FILES['profile_image']['error'] : 
+            __('no_file_uploaded');
+        throw new Exception(__('file_upload_error') . ': ' . $error_message);
     }
 
     $file = $_FILES['profile_image'];
     
     // Dosya uzantısını kontrol et
     $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
-    $file_extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $filename = $_FILES['profile_image']['name'];
+    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
     
-    error_log('Dosya uzantısı: ' . $file_extension);
+    error_log('Dosya uzantısı: ' . $ext);
     
-    if (!in_array($file_extension, $allowed_extensions)) {
-        throw new Exception('Sadece JPG, PNG ve GIF dosyaları yüklenebilir. Gönderilen dosya uzantısı: ' . $file_extension);
+    if (!in_array($ext, $allowed_extensions)) {
+        throw new Exception(__('invalid_file_type'));
     }
 
     // Dosya boyutunu kontrol et (max 5MB)
     if ($file['size'] > 5 * 1024 * 1024) {
-        throw new Exception('Dosya boyutu 5MB\'dan büyük olamaz. Gönderilen dosya boyutu: ' . ($file['size'] / 1024 / 1024) . 'MB');
+        throw new Exception(__('file_size_error'));
     }
 
     // Uploads klasörünü kontrol et ve oluştur
@@ -57,7 +59,7 @@ try {
     if (!file_exists($uploads_dir)) {
         error_log('Uploads dizini oluşturuluyor...');
         if (!mkdir($uploads_dir, 0777, true)) {
-            throw new Exception('Uploads klasörü oluşturulamadı. Hata: ' . error_get_last()['message']);
+            throw new Exception(__('create_uploads_dir_error') . ': ' . error_get_last()['message']);
         }
         chmod($uploads_dir, 0777);
     }
@@ -65,18 +67,18 @@ try {
     if (!file_exists($profiles_dir)) {
         error_log('Profiles dizini oluşturuluyor...');
         if (!mkdir($profiles_dir, 0777, true)) {
-            throw new Exception('Profiles klasörü oluşturulamadı. Hata: ' . error_get_last()['message']);
+            throw new Exception(__('create_profiles_dir_error') . ': ' . error_get_last()['message']);
         }
         chmod($profiles_dir, 0777);
     }
 
     // Dizin yazma izinlerini kontrol et
     if (!is_writable($profiles_dir)) {
-        throw new Exception('Profiles dizinine yazma izni yok. Dizin: ' . $profiles_dir);
+        throw new Exception(__('profiles_dir_not_writable') . ': ' . $profiles_dir);
     }
 
     // Yeni dosya adı oluştur
-    $new_filename = uniqid('profile_') . '.' . $file_extension;
+    $new_filename = uniqid('profile_') . '.' . $ext;
     $upload_path = $profiles_dir . '/' . $new_filename;
     
     error_log('Yükleme yolu: ' . $upload_path);
@@ -84,7 +86,7 @@ try {
     // Dosyayı yükle
     if (!move_uploaded_file($file['tmp_name'], $upload_path)) {
         $error = error_get_last();
-        throw new Exception('Dosya yüklenirken bir hata oluştu: ' . ($error ? $error['message'] : 'Bilinmeyen hata'));
+        throw new Exception(__('file_upload_error') . ': ' . ($error ? $error['message'] : __('unknown_error')));
     }
 
     // Dosya izinlerini ayarla
@@ -115,7 +117,7 @@ try {
 
     echo json_encode([
         'success' => true,
-        'message' => 'Profil resmi başarıyla güncellendi.',
+        'message' => __('profile_image_updated'),
         'profile_image' => $profile_image
     ]);
 
@@ -125,7 +127,7 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'Profil resmi yüklenirken bir hata oluştu: ' . $e->getMessage(),
+        'message' => __('profile_image_update_error') . ': ' . $e->getMessage(),
         'debug_info' => [
             'error' => $e->getMessage(),
             'file' => $e->getFile(),
