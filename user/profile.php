@@ -265,6 +265,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </select>
                             </div>
 
+                            <div class="mb-4">
+                                <label class="form-label">Sosyal Medya Profilleri</label>
+                                <div id="socialProfiles">
+                                    <?php foreach ($social_profiles as $index => $profile): ?>
+                                    <div class="social-profile-item mb-3">
+                                        <input type="hidden" name="social_profiles[<?php echo $index; ?>][id]" value="<?php echo $profile['id']; ?>">
+                                        <div class="row g-2">
+                                            <div class="col-md-3">
+                                                <select class="form-select platform-select" name="social_profiles[<?php echo $index; ?>][platform]" required>
+                                                    <option value="">Platform Seçin</option>
+                                                    <option value="Facebook" data-icon="facebook" <?php echo $profile['platform'] == 'Facebook' ? 'selected' : ''; ?>>Facebook</option>
+                                                    <option value="Twitter" data-icon="twitter" <?php echo $profile['platform'] == 'Twitter' ? 'selected' : ''; ?>>Twitter</option>
+                                                    <option value="Instagram" data-icon="instagram" <?php echo $profile['platform'] == 'Instagram' ? 'selected' : ''; ?>>Instagram</option>
+                                                    <option value="LinkedIn" data-icon="linkedin" <?php echo $profile['platform'] == 'LinkedIn' ? 'selected' : ''; ?>>LinkedIn</option>
+                                                    <option value="GitHub" data-icon="github" <?php echo $profile['platform'] == 'GitHub' ? 'selected' : ''; ?>>GitHub</option>
+                                                    <option value="YouTube" data-icon="youtube" <?php echo $profile['platform'] == 'YouTube' ? 'selected' : ''; ?>>YouTube</option>
+                                                    <option value="TikTok" data-icon="tiktok" <?php echo $profile['platform'] == 'TikTok' ? 'selected' : ''; ?>>TikTok</option>
+                                                    <option value="Telegram" data-icon="telegram" <?php echo $profile['platform'] == 'Telegram' ? 'selected' : ''; ?>>Telegram</option>
+                                                    <option value="Discord" data-icon="discord" <?php echo $profile['platform'] == 'Discord' ? 'selected' : ''; ?>>Discord</option>
+                                                    <option value="Twitch" data-icon="twitch" <?php echo $profile['platform'] == 'Twitch' ? 'selected' : ''; ?>>Twitch</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" name="social_profiles[<?php echo $index; ?>][username]" 
+                                                       placeholder="Kullanıcı Adı" value="<?php echo htmlspecialchars($profile['username']); ?>" required>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="url" class="form-control" name="social_profiles[<?php echo $index; ?>][url]" 
+                                                       placeholder="Profil URL" value="<?php echo htmlspecialchars($profile['url']); ?>" required>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-danger" onclick="removeSocialProfile(this)">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                            <input type="hidden" name="social_profiles[<?php echo $index; ?>][icon]" 
+                                                   value="<?php echo htmlspecialchars($profile['icon'] ?? ''); ?>">
+                                        </div>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary" onclick="addSocialProfile()">
+                                    <i class="bi bi-plus"></i> Sosyal Medya Ekle
+                                </button>
+                            </div>
+
                             <div class="text-end">
                                 <a href="dashboard.php" class="btn btn-secondary">İptal</a>
                                 <button type="submit" class="btn btn-primary">Kaydet</button>
@@ -278,6 +324,70 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+    let socialProfileCount = <?php echo count($social_profiles); ?>;
+
+    function addSocialProfile() {
+        const template = `
+            <div class="social-profile-item mb-3">
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <select class="form-select platform-select" name="social_profiles[${socialProfileCount}][platform]" required>
+                            <option value="">Platform Seçin</option>
+                            <option value="Facebook" data-icon="facebook">Facebook</option>
+                            <option value="Twitter" data-icon="twitter">Twitter</option>
+                            <option value="Instagram" data-icon="instagram">Instagram</option>
+                            <option value="LinkedIn" data-icon="linkedin">LinkedIn</option>
+                            <option value="GitHub" data-icon="github">GitHub</option>
+                            <option value="YouTube" data-icon="youtube">YouTube</option>
+                            <option value="TikTok" data-icon="tiktok">TikTok</option>
+                            <option value="Telegram" data-icon="telegram">Telegram</option>
+                            <option value="Discord" data-icon="discord">Discord</option>
+                            <option value="Twitch" data-icon="twitch">Twitch</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" name="social_profiles[${socialProfileCount}][username]" 
+                               placeholder="Kullanıcı Adı" required>
+                    </div>
+                    <div class="col-md-5">
+                        <input type="url" class="form-control" name="social_profiles[${socialProfileCount}][url]" 
+                               placeholder="Profil URL" required>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-danger" onclick="removeSocialProfile(this)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    <input type="hidden" name="social_profiles[${socialProfileCount}][icon]">
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('socialProfiles').insertAdjacentHTML('beforeend', template);
+        
+        // Yeni eklenen profil için platform seçimi olayını ekle
+        const newProfile = document.getElementById('socialProfiles').lastElementChild;
+        const platformSelect = newProfile.querySelector('.platform-select');
+        setupPlatformSelect(platformSelect);
+        
+        socialProfileCount++;
+    }
+
+    function removeSocialProfile(button) {
+        button.closest('.social-profile-item').remove();
+    }
+
+    function setupPlatformSelect(select) {
+        select.addEventListener('change', function() {
+            const iconInput = this.closest('.social-profile-item').querySelector('input[name$="[icon]"]');
+            const selectedOption = this.options[this.selectedIndex];
+            iconInput.value = selectedOption.dataset.icon || selectedOption.value.toLowerCase();
+        });
+    }
+
+    // Mevcut profiller için platform seçimi olaylarını ekle
+    document.querySelectorAll('.platform-select').forEach(setupPlatformSelect);
+
     function uploadProfileImage(input) {
         if (input.files && input.files[0]) {
             const formData = new FormData();
