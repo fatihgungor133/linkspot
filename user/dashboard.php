@@ -111,7 +111,7 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <i class="bi bi-clipboard"></i>
                             </button>
                         </div>
-                        <a href="profile.php" class="btn btn-sm btn-outline-primary">Profili Düzenle</a>
+                        <a href="profile.php" class="btn btn-sm btn-outline-primary"><?php echo __('edit_profile'); ?></a>
                     </div>
                 </div>
 

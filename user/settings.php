@@ -1,5 +1,6 @@
 <?php
 require_once '../config/database.php';
+require_once '../includes/language.php';
 session_start();
 
 // Oturum kontrolü
@@ -176,17 +177,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_account'])) {
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="profile.php">
-                            <i class="bi bi-person"></i> Profil
+                            <i class="bi bi-person"></i> <?php echo __('profile'); ?>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="settings.php">
-                            <i class="bi bi-gear"></i> Ayarlar
+                            <i class="bi bi-gear"></i> <?php echo __('settings'); ?>
                         </a>
                     </li>
                     <li class="nav-item">
+                        <?php echo language_selector(); ?>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="../logout.php">
-                            <i class="bi bi-box-arrow-right"></i> Çıkış
+                            <i class="bi bi-box-arrow-right"></i> <?php echo __('logout'); ?>
                         </a>
                     </li>
                 </ul>
@@ -212,25 +216,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_account'])) {
         <!-- Şifre Değiştirme -->
         <div class="card">
             <div class="card-header">
-                <h5><i class="bi bi-key me-2"></i>Şifre Değiştir</h5>
+                <h5><i class="bi bi-key me-2"></i><?php echo __('change_password'); ?></h5>
             </div>
             <div class="card-body">
                 <form method="POST" class="needs-validation" novalidate>
                     <div class="mb-3">
-                        <label for="current_password" class="form-label">Mevcut Şifre</label>
+                        <label for="current_password" class="form-label"><?php echo __('current_password'); ?></label>
                         <input type="password" class="form-control" id="current_password" name="current_password" required>
                     </div>
                     <div class="mb-3">
-                        <label for="new_password" class="form-label">Yeni Şifre</label>
+                        <label for="new_password" class="form-label"><?php echo __('new_password'); ?></label>
                         <input type="password" class="form-control" id="new_password" name="new_password" required>
-                        <div class="form-text">En az 6 karakter olmalıdır.</div>
+                        <div class="form-text"><?php echo __('min_password_length'); ?></div>
                     </div>
                     <div class="mb-3">
-                        <label for="confirm_password" class="form-label">Yeni Şifre Tekrar</label>
+                        <label for="confirm_password" class="form-label"><?php echo __('confirm_new_password'); ?></label>
                         <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
                     </div>
                     <button type="submit" name="change_password" class="btn btn-primary">
-                        <i class="bi bi-check2 me-2"></i>Şifreyi Güncelle
+                        <i class="bi bi-check2 me-2"></i><?php echo __('update_password'); ?>
                     </button>
                 </form>
             </div>
@@ -239,7 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_account'])) {
         <!-- E-posta Bildirimleri -->
         <div class="card">
             <div class="card-header">
-                <h5><i class="bi bi-bell me-2"></i>Bildirim Ayarları</h5>
+                <h5><i class="bi bi-bell me-2"></i><?php echo __('notification_settings'); ?></h5>
             </div>
             <div class="card-body">
                 <form method="POST">
@@ -247,14 +251,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_account'])) {
                         <input class="form-check-input" type="checkbox" id="email_notifications" 
                                name="email_notifications" <?php echo $user['email_notifications'] ? 'checked' : ''; ?>>
                         <label class="form-check-label" for="email_notifications">
-                            E-posta bildirimleri
+                            <?php echo __('email_notifications'); ?>
                         </label>
                     </div>
                     <div class="form-text mb-3">
-                        Ziyaret istatistikleri ve önemli güncellemeler hakkında e-posta bildirimleri alın.
+                        <?php echo __('notification_help_text'); ?>
                     </div>
                     <button type="submit" name="update_notifications" class="btn btn-primary">
-                        <i class="bi bi-check2 me-2"></i>Ayarları Kaydet
+                        <i class="bi bi-check2 me-2"></i><?php echo __('save_settings'); ?>
                     </button>
                 </form>
             </div>
@@ -263,14 +267,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_account'])) {
         <!-- Hesap Silme -->
         <div class="card">
             <div class="card-header">
-                <h5><i class="bi bi-exclamation-triangle me-2"></i>Hesabı Sil</h5>
+                <h5><i class="bi bi-exclamation-triangle me-2"></i><?php echo __('delete_account'); ?></h5>
             </div>
             <div class="card-body">
                 <p class="text-muted mb-4">
-                    Hesabınızı sildiğinizde, tüm verileriniz kalıcı olarak silinecektir. Bu işlem geri alınamaz.
+                    <?php echo __('delete_account_warning'); ?>
                 </p>
                 <button type="button" class="btn btn-danger-soft" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
-                    <i class="bi bi-trash me-2"></i>Hesabı Sil
+                    <i class="bi bi-trash me-2"></i><?php echo __('delete_account'); ?>
                 </button>
             </div>
         </div>
