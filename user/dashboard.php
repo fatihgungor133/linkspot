@@ -77,8 +77,9 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="col-md-3">
                 <div class="card mb-4">
                     <div class="card-body text-center">
-                        <img src="<?php echo $user['profile_image'] ?? 'https://via.placeholder.com/150' ?>" 
-                             class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                        <img src="<?php echo !empty($user['profile_image']) ? '../' . htmlspecialchars($user['profile_image']) : 'https://via.placeholder.com/150' ?>" 
+                             class="rounded-circle mb-3" 
+                             style="width: 100px; height: 100px; object-fit: cover;">
                         <h5 class="card-title"><?php echo htmlspecialchars($user['username']); ?></h5>
                         <p class="card-text"><?php echo htmlspecialchars($user['profile_title'] ?? ''); ?></p>
                         <a href="profile.php" class="btn btn-sm btn-outline-primary">Profili Düzenle</a>
