@@ -41,6 +41,24 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <link href="../assets/css/style.css" rel="stylesheet">
+    <style>
+        .list-group-item {
+            cursor: move;
+            transition: background-color 0.2s;
+        }
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+        .list-group-item.sortable-ghost {
+            opacity: 0.5;
+            background-color: #e9ecef;
+        }
+        .drag-handle {
+            cursor: move;
+            color: #6c757d;
+            margin-right: 0.5rem;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -119,6 +137,7 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                          data-link-id="<?php echo $link['id']; ?>"
                                          data-active="<?php echo $link['is_active']; ?>">
                                         <div>
+                                            <i class="bi bi-grip-vertical drag-handle"></i>
                                             <i class="bi bi-<?php echo htmlspecialchars($link['icon'] ?? 'link'); ?>"></i>
                                             <span class="ms-2 link-title"><?php echo htmlspecialchars($link['title']); ?></span>
                                             <span class="link-url" data-url="<?php echo htmlspecialchars($link['url']); ?>" style="display: none;"></span>
@@ -229,6 +248,7 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
         // Ziyaret grafiği
         const visitData = <?php echo json_encode($visits); ?>;
@@ -448,6 +468,44 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
             setTimeout(() => {
                 alertDiv.remove();
             }, 3000);
+        }
+
+        // Sürükle-bırak sıralama için Sortable.js ayarları
+        const linksContainer = document.querySelector('.list-group');
+        const sortable = new Sortable(linksContainer, {
+            animation: 150,
+            handle: '.drag-handle',
+            ghostClass: 'sortable-ghost',
+            onEnd: function() {
+                updateLinksOrder();
+            }
+        });
+
+        function updateLinksOrder() {
+            const items = linksContainer.querySelectorAll('.list-group-item');
+            const order = Array.from(items).map((item, index) => {
+                return item.dataset.linkId;
+            });
+
+            fetch('update_link_order.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(order)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('success', 'Sıralama güncellendi');
+                } else {
+                    showAlert('danger', data.message || 'Sıralama güncellenirken bir hata oluştu');
+                }
+            })
+            .catch(error => {
+                showAlert('danger', 'Sıralama güncellenirken bir hata oluştu');
+                console.error('Error:', error);
+            });
         }
     </script>
 </body>
