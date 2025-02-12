@@ -46,7 +46,15 @@ INSERT INTO language_strings (language_id, string_key, string_value) VALUES
 ((SELECT id FROM languages WHERE code = 'en'), 'discard_changes', 'Discard Changes'),
 ((SELECT id FROM languages WHERE code = 'en'), 'confirm_discard', 'Are you sure you want to discard your changes?'),
 ((SELECT id FROM languages WHERE code = 'en'), 'yes_discard', 'Yes, discard'),
-((SELECT id FROM languages WHERE code = 'en'), 'no_keep_editing', 'No, keep editing');
+((SELECT id FROM languages WHERE code = 'en'), 'no_keep_editing', 'No, keep editing'),
+((SELECT id FROM languages WHERE code = 'en'), 'background_color', 'Background Color'),
+((SELECT id FROM languages WHERE code = 'en'), 'main_color', 'Main Color'),
+((SELECT id FROM languages WHERE code = 'en'), 'text_color', 'Text Color'),
+((SELECT id FROM languages WHERE code = 'en'), 'card_background', 'Card Background'),
+((SELECT id FROM languages WHERE code = 'en'), 'theme_style', 'Theme Style'),
+((SELECT id FROM languages WHERE code = 'en'), 'auto_system', 'Auto (System)'),
+((SELECT id FROM languages WHERE code = 'en'), 'light_theme', 'Light Theme'),
+((SELECT id FROM languages WHERE code = 'en'), 'dark_theme', 'Dark Theme');
 
 -- Türkçe çeviriler
 INSERT INTO language_strings (language_id, string_key, string_value) VALUES 
@@ -96,4 +104,12 @@ INSERT INTO language_strings (language_id, string_key, string_value) VALUES
 ((SELECT id FROM languages WHERE code = 'tr'), 'discard_changes', 'Değişiklikleri İptal Et'),
 ((SELECT id FROM languages WHERE code = 'tr'), 'confirm_discard', 'Değişiklikleri iptal etmek istediğinizden emin misiniz?'),
 ((SELECT id FROM languages WHERE code = 'tr'), 'yes_discard', 'Evet, iptal et'),
-((SELECT id FROM languages WHERE code = 'tr'), 'no_keep_editing', 'Hayır, düzenlemeye devam et'); 
+((SELECT id FROM languages WHERE code = 'tr'), 'no_keep_editing', 'Hayır, düzenlemeye devam et'),
+((SELECT id FROM languages WHERE code = 'tr'), 'background_color', 'Arka Plan Rengi'),
+((SELECT id FROM languages WHERE code = 'tr'), 'main_color', 'Ana Renk'),
+((SELECT id FROM languages WHERE code = 'tr'), 'text_color', 'Metin Rengi'),
+((SELECT id FROM languages WHERE code = 'tr'), 'card_background', 'Kart Arka Planı'),
+((SELECT id FROM languages WHERE code = 'tr'), 'theme_style', 'Tema Stili'),
+((SELECT id FROM languages WHERE code = 'tr'), 'auto_system', 'Otomatik (Sistem)'),
+((SELECT id FROM languages WHERE code = 'tr'), 'light_theme', 'Açık Tema'),
+((SELECT id FROM languages WHERE code = 'tr'), 'dark_theme', 'Koyu Tema'); 
