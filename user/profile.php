@@ -344,15 +344,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                             </div>
 
+                            <div class="d-flex justify-content-between mb-4">
+                                <div class="btn-group">
+                                    <a href="../<?php echo $user['username']; ?>" target="_blank" class="btn btn-outline-primary">
+                                        <i class="bi bi-eye"></i> <?php echo __('preview_profile'); ?>
+                                    </a>
+                                    <button type="button" class="btn btn-outline-primary" onclick="copyProfileUrl()">
+                                        <i class="bi bi-clipboard"></i> <?php echo __('copy_profile_url'); ?>
+                                    </button>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-secondary" onclick="confirmDiscard()">
+                                        <i class="bi bi-x"></i> <?php echo __('discard_changes'); ?>
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check2"></i> <?php echo __('save_changes'); ?>
+                                    </button>
+                                </div>
+                            </div>
+
                             <div class="mb-4">
-                                <label class="form-label"><?php echo __('social_profiles'); ?></label>
+                                <h5 class="mb-3"><?php echo __('social_profiles'); ?></h5>
                                 <div id="socialProfiles">
                                     <?php foreach ($social_profiles as $index => $profile): ?>
                                     <div class="social-profile-item mb-3" data-id="<?php echo $profile['id']; ?>">
                                         <input type="hidden" name="social_profiles[<?php echo $index; ?>][id]" value="<?php echo $profile['id']; ?>">
                                         <div class="row g-2 align-items-center">
                                             <div class="col-auto">
-                                                <i class="bi bi-grip-vertical drag-handle"></i>
+                                                <i class="bi bi-grip-vertical drag-handle" title="<?php echo __('drag_to_reorder'); ?>"></i>
                                             </div>
                                             <div class="col-md-3">
                                                 <select class="form-select platform-select" name="social_profiles[<?php echo $index; ?>][platform]" required>
@@ -390,11 +409,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <i class="bi bi-plus"></i> <?php echo __('add_social'); ?>
                                 </button>
                             </div>
-
-                            <div class="text-end">
-                                <a href="dashboard.php" class="btn btn-secondary"><?php echo __('cancel'); ?></a>
-                                <button type="submit" class="btn btn-primary"><?php echo __('save'); ?></button>
-                            </div>
                         </form>
                     </div>
                 </div>
@@ -412,7 +426,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="social-profile-item mb-3">
                 <div class="row g-2 align-items-center">
                     <div class="col-auto">
-                        <i class="bi bi-grip-vertical drag-handle"></i>
+                        <i class="bi bi-grip-vertical drag-handle" title="<?php echo __('drag_to_reorder'); ?>"></i>
                     </div>
                     <div class="col-md-3">
                         <select class="form-select platform-select" name="social_profiles[${socialProfileCount}][platform]" required>
@@ -471,14 +485,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.reload();
+                showAlert('success', '<?php echo __('theme_update_success'); ?>');
+                setTimeout(() => window.location.reload(), 1000);
             } else {
-                alert(data.message);
+                showAlert('danger', '<?php echo __('theme_update_error'); ?>');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('<?php echo __('theme_apply_error'); ?>');
+            showAlert('danger', '<?php echo __('theme_update_error'); ?>');
         });
     }
 
@@ -498,21 +513,66 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showAlert('success', data.message);
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
+                    showAlert('success', '<?php echo __('profile_image_updated'); ?>');
+                    setTimeout(() => window.location.reload(), 1000);
                 } else {
                     showAlert('danger', data.message);
                 }
             })
             .catch(error => {
-                showAlert('danger', '<?php echo __('upload_error'); ?>');
+                showAlert('danger', '<?php echo __('profile_image_update_error'); ?>');
                 console.error('Error:', error);
             });
         }
     }
 
+    // Tooltip'leri etkinleştir
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+
+    // Profil URL'ini kopyalama
+    function copyProfileUrl() {
+        const url = window.location.origin + '/' + '<?php echo $user['username']; ?>';
+        navigator.clipboard.writeText(url).then(function() {
+            showAlert('success', '<?php echo __('profile_url_copied'); ?>');
+        }).catch(function() {
+            showAlert('danger', '<?php echo __('profile_url_copy_error'); ?>');
+        });
+    }
+
+    // Sıralama güncellemesi
+    function updateOrder(items) {
+        fetch('update_social_profile_order.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(items)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('success', '<?php echo __('order_updated'); ?>');
+            } else {
+                showAlert('danger', '<?php echo __('order_update_error'); ?>');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('danger', '<?php echo __('order_update_error'); ?>');
+        });
+    }
+
+    // Değişiklikleri iptal etme onayı
+    function confirmDiscard() {
+        if (confirm('<?php echo __('confirm_discard'); ?>')) {
+            window.location.reload();
+        }
+    }
+
+    // Uyarı gösterme
     function showAlert(type, message) {
         const alertDiv = document.createElement('div');
         alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
