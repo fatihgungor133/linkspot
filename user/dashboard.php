@@ -76,7 +76,8 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="settings.php">
-                            <i class="bi bi-gear"></i> Ayarlar
+                            <i class="bi bi-gear me-2"></i>
+                            Ayarlar
                         </a>
                     </li>
                     <li class="nav-item">
