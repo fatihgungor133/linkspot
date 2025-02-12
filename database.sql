@@ -8,6 +8,10 @@ CREATE TABLE IF NOT EXISTS users (
     profile_description TEXT,
     profile_image VARCHAR(255),
     theme_color VARCHAR(20) DEFAULT '#000000',
+    theme_bg VARCHAR(20) DEFAULT '#f8f9fa',
+    theme_text VARCHAR(20) DEFAULT '#212529',
+    theme_card_bg VARCHAR(20) DEFAULT '#ffffff',
+    theme_style ENUM('light', 'dark', 'auto') DEFAULT 'auto',
     is_admin TINYINT(1) DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

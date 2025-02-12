@@ -23,6 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $profile_title = trim($_POST['profile_title']);
     $profile_description = trim($_POST['profile_description']);
     $theme_color = trim($_POST['theme_color']);
+    $theme_bg = trim($_POST['theme_bg']);
+    $theme_text = trim($_POST['theme_text']);
+    $theme_card_bg = trim($_POST['theme_card_bg']);
+    $theme_style = trim($_POST['theme_style']);
     
     try {
         // Profil resmi yükleme işlemi
@@ -54,8 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $update_query = "UPDATE users SET 
                         profile_title = ?, 
                         profile_description = ?, 
-                        theme_color = ?";
-        $params = [$profile_title, $profile_description, $theme_color];
+                        theme_color = ?,
+                        theme_bg = ?,
+                        theme_text = ?,
+                        theme_card_bg = ?,
+                        theme_style = ?";
+        $params = [$profile_title, $profile_description, $theme_color, $theme_bg, $theme_text, $theme_card_bg, $theme_style];
 
         if (isset($profile_image)) {
             $update_query .= ", profile_image = ?";
@@ -166,9 +174,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
 
                             <div class="mb-3">
-                                <label for="theme_color" class="form-label">Tema Rengi</label>
+                                <label for="theme_color" class="form-label">Ana Renk</label>
                                 <input type="color" class="form-control form-control-color" id="theme_color" name="theme_color" 
                                        value="<?php echo htmlspecialchars($user['theme_color'] ?? '#000000'); ?>">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="theme_bg" class="form-label">Arkaplan Rengi</label>
+                                <input type="color" class="form-control form-control-color" id="theme_bg" name="theme_bg" 
+                                       value="<?php echo htmlspecialchars($user['theme_bg'] ?? '#f8f9fa'); ?>">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="theme_text" class="form-label">Metin Rengi</label>
+                                <input type="color" class="form-control form-control-color" id="theme_text" name="theme_text" 
+                                       value="<?php echo htmlspecialchars($user['theme_text'] ?? '#212529'); ?>">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="theme_card_bg" class="form-label">Kart Arkaplan Rengi</label>
+                                <input type="color" class="form-control form-control-color" id="theme_card_bg" name="theme_card_bg" 
+                                       value="<?php echo htmlspecialchars($user['theme_card_bg'] ?? '#ffffff'); ?>">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="theme_style" class="form-label">Tema Stili</label>
+                                <select class="form-select" id="theme_style" name="theme_style">
+                                    <option value="auto" <?php echo ($user['theme_style'] ?? 'auto') == 'auto' ? 'selected' : ''; ?>>Otomatik (Sistem)</option>
+                                    <option value="light" <?php echo ($user['theme_style'] ?? '') == 'light' ? 'selected' : ''; ?>>Açık Tema</option>
+                                    <option value="dark" <?php echo ($user['theme_style'] ?? '') == 'dark' ? 'selected' : ''; ?>>Koyu Tema</option>
+                                </select>
                             </div>
 
                             <div class="text-end">

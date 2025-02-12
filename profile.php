@@ -71,8 +71,15 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        :root {
+            --theme-color: <?php echo $user['theme_color'] ?? '#000000'; ?>;
+            --theme-bg: <?php echo $user['theme_bg'] ?? '#f8f9fa'; ?>;
+            --theme-text: <?php echo $user['theme_text'] ?? '#212529'; ?>;
+            --theme-card-bg: <?php echo $user['theme_card_bg'] ?? '#ffffff'; ?>;
+        }
         body {
-            background-color: #f8f9fa;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -92,17 +99,17 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             border-radius: 50%;
             object-fit: cover;
             margin-bottom: 1rem;
-            border: 3px solid <?php echo $user['theme_color'] ?? '#000000'; ?>;
+            border: 3px solid var(--theme-color);
         }
         .link-card {
-            background: white;
+            background: var(--theme-card-bg);
             border: 1px solid rgba(0,0,0,.125);
             border-radius: 10px;
             padding: 1rem;
             margin-bottom: 1rem;
             transition: transform 0.2s, box-shadow 0.2s;
             text-decoration: none;
-            color: inherit;
+            color: var(--theme-text);
             display: block;
         }
         .link-card:hover {
@@ -115,23 +122,52 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             padding: 1rem;
             color: #6c757d;
         }
+        .share-buttons {
+            margin: 1rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .share-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .share-button:hover {
+            opacity: 0.8;
+            color: #fff;
+        }
+        .share-facebook { background-color: #1877f2; }
+        .share-twitter { background-color: #1da1f2; }
+        .share-whatsapp { background-color: #25d366; }
+        .share-telegram { background-color: #0088cc; }
+        .share-linkedin { background-color: #0077b5; }
         @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #212529;
-                color: #f8f9fa;
+            body.theme-auto {
+                --theme-bg: #212529;
+                --theme-text: #f8f9fa;
+                --theme-card-bg: #343a40;
             }
-            .link-card {
-                background: #343a40;
-                border-color: #495057;
-                color: #f8f9fa;
-            }
-            .text-muted {
-                color: #adb5bd !important;
-            }
+        }
+        body.theme-dark {
+            --theme-bg: #212529;
+            --theme-text: #f8f9fa;
+            --theme-card-bg: #343a40;
+        }
+        body.theme-light {
+            --theme-bg: #f8f9fa;
+            --theme-text: #212529;
+            --theme-card-bg: #ffffff;
         }
     </style>
 </head>
-<body>
+<body class="theme-<?php echo $user['theme_style'] ?? 'auto'; ?>">
     <div class="profile-container">
         <div class="profile-header">
             <img src="<?php echo $user['profile_image'] ? htmlspecialchars($user['profile_image']) : 'https://via.placeholder.com/150' ?>" 
@@ -143,6 +179,44 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             <?php if (!empty($user['profile_description'])): ?>
                 <p class="text-muted mb-4"><?php echo nl2br(htmlspecialchars($user['profile_description'])); ?></p>
             <?php endif; ?>
+
+            <!-- Sosyal Medya Paylaşım Butonları -->
+            <div class="share-buttons">
+                <?php
+                $share_url = urlencode("https://$_SERVER[HTTP_HOST]/$username");
+                $share_title = urlencode($user['profile_title'] ?? $user['username']);
+                ?>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $share_url; ?>" 
+                   target="_blank" 
+                   class="share-button share-facebook" 
+                   title="Facebook'ta Paylaş">
+                    <i class="bi bi-facebook"></i>
+                </a>
+                <a href="https://twitter.com/intent/tweet?url=<?php echo $share_url; ?>&text=<?php echo $share_title; ?>" 
+                   target="_blank" 
+                   class="share-button share-twitter" 
+                   title="Twitter'da Paylaş">
+                    <i class="bi bi-twitter"></i>
+                </a>
+                <a href="https://wa.me/?text=<?php echo $share_title . '%20' . $share_url; ?>" 
+                   target="_blank" 
+                   class="share-button share-whatsapp" 
+                   title="WhatsApp'ta Paylaş">
+                    <i class="bi bi-whatsapp"></i>
+                </a>
+                <a href="https://t.me/share/url?url=<?php echo $share_url; ?>&text=<?php echo $share_title; ?>" 
+                   target="_blank" 
+                   class="share-button share-telegram" 
+                   title="Telegram'da Paylaş">
+                    <i class="bi bi-telegram"></i>
+                </a>
+                <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo $share_url; ?>&title=<?php echo $share_title; ?>" 
+                   target="_blank" 
+                   class="share-button share-linkedin" 
+                   title="LinkedIn'de Paylaş">
+                    <i class="bi bi-linkedin"></i>
+                </a>
+            </div>
         </div>
 
         <div class="links-container">
@@ -153,7 +227,7 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
                    onclick="recordClick(<?php echo $link['id']; ?>)">
                     <div class="d-flex align-items-center">
                         <i class="bi bi-<?php echo htmlspecialchars($link['icon'] ?? 'link'); ?> me-3" 
-                           style="font-size: 1.5rem; color: <?php echo $user['theme_color'] ?? '#000000'; ?>;"></i>
+                           style="font-size: 1.5rem; color: var(--theme-color);"></i>
                         <span><?php echo htmlspecialchars($link['title']); ?></span>
                     </div>
                 </a>
