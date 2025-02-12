@@ -56,6 +56,80 @@ $stmt->execute([$user['id'], $ip, $user_agent]);
 // Meta etiketleri için açıklama
 $meta_description = $user['profile_description'] ?? $user['username'] . ' - LinkSpot profili';
 $meta_description = substr(strip_tags($meta_description), 0, 160);
+
+<?php if ($user['theme_id']): ?>
+    <?php
+    // Tema bilgilerini al
+    $theme_query = "SELECT * FROM themes WHERE id = ?";
+    $stmt = $db->prepare($theme_query);
+    $stmt->execute([$user['theme_id']]);
+    $theme = $stmt->fetch(PDO::FETCH_ASSOC);
+    ?>
+    <?php if ($theme && $theme['css_code']): ?>
+        <style>
+            <?php echo $theme['css_code']; ?>
+        </style>
+    <?php endif; ?>
+<?php endif; ?>
+
+<style>
+    :root {
+        --theme-color: <?php echo $user['theme_color'] ?? '#000000'; ?>;
+        --theme-bg: <?php echo $user['theme_bg'] ?? '#f8f9fa'; ?>;
+        --theme-text: <?php echo $user['theme_text'] ?? '#212529'; ?>;
+        --theme-card-bg: <?php echo $user['theme_card_bg'] ?? '#ffffff'; ?>;
+    }
+    body {
+        background-color: var(--theme-bg);
+        color: var(--theme-text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    .profile-container {
+        max-width: 680px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+    .profile-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+        border: 3px solid var(--theme-color);
+    }
+    .link-card {
+        background: var(--theme-card-bg);
+        border: 1px solid rgba(0,0,0,.125);
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-decoration: none;
+        color: var(--theme-text);
+        display: block;
+    }
+    .link-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,.1);
+    }
+    .footer {
+        margin-top: auto;
+        text-align: center;
+        padding: 1rem;
+        color: #6c757d;
+    }
+    .share-buttons {
+        margin: 1rem 0;
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+    }
 ?>
 <!DOCTYPE html>
 <html lang="tr">

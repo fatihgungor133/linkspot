@@ -24,6 +24,12 @@ $stmt = $db->prepare($social_query);
 $stmt->execute([$user_id]);
 $social_profiles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Tema listesini al
+$themes_query = "SELECT * FROM themes ORDER BY is_premium ASC, name ASC";
+$stmt = $db->prepare($themes_query);
+$stmt->execute();
+$themes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // Form gönderildiğinde
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $profile_title = trim($_POST['profile_title']);
@@ -290,6 +296,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </div>
 
                             <div class="mb-4">
+                                <h5 class="mb-3">Tema Seçimi</h5>
+                                <div class="row g-3">
+                                    <?php foreach ($themes as $theme): ?>
+                                        <div class="col-md-4">
+                                            <div class="card h-100 <?php echo $theme['id'] == $user['theme_id'] ? 'border-primary' : ''; ?>">
+                                                <?php if ($theme['thumbnail']): ?>
+                                                    <img src="<?php echo htmlspecialchars($theme['thumbnail']); ?>" 
+                                                         class="card-img-top" alt="<?php echo htmlspecialchars($theme['name']); ?>"
+                                                         style="height: 120px; object-fit: cover;">
+                                                <?php else: ?>
+                                                    <div class="card-img-top bg-light" style="height: 120px;">
+                                                        <div class="w-100 h-100 d-flex align-items-center justify-content-center">
+                                                            <i class="bi bi-palette fs-1"></i>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <div class="card-body">
+                                                    <h6 class="card-title d-flex align-items-center justify-content-between">
+                                                        <?php echo htmlspecialchars($theme['name']); ?>
+                                                        <?php if ($theme['is_premium']): ?>
+                                                            <span class="badge bg-warning">Premium</span>
+                                                        <?php endif; ?>
+                                                    </h6>
+                                                    <p class="card-text small text-muted"><?php echo htmlspecialchars($theme['description']); ?></p>
+                                                    <div class="d-flex gap-1 mb-2">
+                                                        <div class="rounded-circle" style="width: 20px; height: 20px; background-color: <?php echo $theme['theme_color']; ?>"></div>
+                                                        <div class="rounded-circle" style="width: 20px; height: 20px; background-color: <?php echo $theme['theme_bg']; ?>"></div>
+                                                        <div class="rounded-circle" style="width: 20px; height: 20px; background-color: <?php echo $theme['theme_card_bg']; ?>"></div>
+                                                    </div>
+                                                    <?php if ($theme['id'] == $user['theme_id']): ?>
+                                                        <button type="button" class="btn btn-primary btn-sm w-100" disabled>
+                                                            <i class="bi bi-check2"></i> Seçili
+                                                        </button>
+                                                    <?php elseif ($theme['is_premium'] && !$user['is_premium']): ?>
+                                                        <button type="button" class="btn btn-warning btn-sm w-100" onclick="upgradeToPremium()">
+                                                            <i class="bi bi-star"></i> Premium'a Yükselt
+                                                        </button>
+                                                    <?php else: ?>
+                                                        <button type="button" class="btn btn-outline-primary btn-sm w-100" onclick="applyTheme(<?php echo $theme['id']; ?>)">
+                                                            Temayı Uygula
+                                                        </button>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
                                 <label class="form-label">Sosyal Medya Profilleri</label>
                                 <div id="socialProfiles">
                                     <?php foreach ($social_profiles as $index => $profile): ?>
@@ -495,6 +551,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             showAlert('danger', 'Sıralama güncellenirken bir hata oluştu');
             console.error('Error:', error);
         });
+    }
+
+    function applyTheme(themeId) {
+        fetch('apply_theme.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ theme_id: themeId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                showAlert('danger', data.message || 'Tema uygulanırken bir hata oluştu');
+            }
+        })
+        .catch(error => {
+            showAlert('danger', 'Tema uygulanırken bir hata oluştu');
+            console.error('Error:', error);
+        });
+    }
+
+    function upgradeToPremium() {
+        // Premium yükseltme sayfasına yönlendir
+        window.location.href = 'premium.php';
     }
     </script>
 </body>
