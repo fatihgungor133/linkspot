@@ -1,7 +1,12 @@
 <?php
+session_start();
 require_once 'config/database.php';
 require_once 'includes/language.php';
-session_start();
+
+// Dil kontrolü
+if (!isset($_SESSION['language'])) {
+    $_SESSION['language'] = 'tr'; // Varsayılan dil
+}
 
 // Eğer kullanıcı zaten giriş yapmışsa, panele yönlendir
 if (isset($_SESSION['user_id'])) {

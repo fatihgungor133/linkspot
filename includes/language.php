@@ -26,7 +26,11 @@ if (isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'tr'])) {
 
 // Metinleri getir
 function get_language_strings($lang_code) {
-    require_once 'config/database.php';
+    global $db;
+    
+    if (!isset($db)) {
+        require dirname(__DIR__) . '/config/database.php';
+    }
     
     $query = "SELECT ls.string_key, ls.string_value 
               FROM language_strings ls 
@@ -57,25 +61,45 @@ function __($key) {
 
 // Dil seçim menüsü HTML'i
 function language_selector() {
-    $current_lang = $_SESSION['language'];
-    $languages = [
-        'en' => 'English',
-        'tr' => 'Türkçe'
-    ];
+    global $db;
     
-    $html = '<div class="dropdown">';
-    $html .= '<button class="btn btn-link nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown">';
-    $html .= '<i class="bi bi-globe"></i> ' . $languages[$current_lang];
-    $html .= '</button>';
-    $html .= '<ul class="dropdown-menu">';
-    
-    foreach ($languages as $code => $name) {
-        $active = $code === $current_lang ? ' active' : '';
-        $html .= '<li><a class="dropdown-item' . $active . '" href="?lang=' . $code . '">' . $name . '</a></li>';
+    if (!isset($db)) {
+        require dirname(__DIR__) . '/config/database.php';
     }
     
-    $html .= '</ul></div>';
+    $query = "SELECT code, name FROM languages WHERE is_active = 1";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
     
-    return $html;
+    $output = '<select class="form-select" onchange="window.location.href=\'?lang=\'+this.value">';
+    while ($lang = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $selected = (isset($_SESSION['language']) && $_SESSION['language'] == $lang['code']) ? 'selected' : '';
+        $output .= sprintf(
+            '<option value="%s" %s>%s</option>',
+            $lang['code'],
+            $selected,
+            $lang['name']
+        );
+    }
+    $output .= '</select>';
+    
+    return $output;
+}
+
+// Dil değiştirme işlemi
+if (isset($_GET['lang'])) {
+    $lang_code = $_GET['lang'];
+    $query = "SELECT code FROM languages WHERE code = ? AND is_active = 1";
+    $stmt = $db->prepare($query);
+    $stmt->execute([$lang_code]);
+    
+    if ($stmt->rowCount() > 0) {
+        $_SESSION['language'] = $lang_code;
+    }
+    
+    // Mevcut URL'den lang parametresini kaldır
+    $redirect_url = strtok($_SERVER['REQUEST_URI'], '?');
+    header("Location: " . $redirect_url);
+    exit;
 }
 ?> 
