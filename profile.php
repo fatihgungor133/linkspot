@@ -105,108 +105,168 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         .profile-container {
-            max-width: 680px;
+            max-width: 800px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
         .profile-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: var(--theme-card-bg);
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
         .profile-image {
-            width: 150px;
-            height: 150px;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 1rem;
-            border: 3px solid var(--theme-color);
+            margin-bottom: 1.5rem;
+            border: 4px solid var(--theme-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .profile-image:hover {
+            transform: scale(1.05);
         }
         .link-card {
             background: var(--theme-card-bg);
-            border: 1px solid rgba(0,0,0,.125);
-            border-radius: 10px;
-            padding: 1rem;
+            border: none;
+            border-radius: 15px;
+            padding: 1.25rem;
             margin-bottom: 1rem;
             transition: transform 0.2s, box-shadow 0.2s;
             text-decoration: none;
             color: var(--theme-text);
             display: block;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
         .link-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,.1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
         .footer {
             margin-top: auto;
             text-align: center;
-            padding: 1rem;
+            padding: 2rem;
             color: #6c757d;
+            background: var(--theme-card-bg);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
         }
         .share-buttons {
-            margin: 1rem 0;
+            margin: 1.5rem 0;
             display: flex;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
         .share-button {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
             text-decoration: none;
-            transition: opacity 0.2s;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
         }
         .share-button:hover {
-            opacity: 0.8;
+            opacity: 0.9;
+            transform: translateY(-2px);
             color: #fff;
         }
-        .share-facebook { background-color: #1877f2; }
-        .share-twitter { background-color: #1da1f2; }
-        .share-whatsapp { background-color: #25d366; }
-        .share-telegram { background-color: #0088cc; }
-        .share-linkedin { background-color: #0077b5; }
+        .social-buttons {
+            margin: 1.5rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .social-button {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            background-color: var(--theme-color);
+        }
+        .social-button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            color: #fff;
+        }
+        .profile-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--theme-text);
+        }
+        .profile-description {
+            font-size: 1.1rem;
+            color: #6c757d;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.6;
+        }
+        .links-container {
+            padding: 0.5rem;
+        }
+        .link-card .link-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        .link-card .link-image {
+            width: 32px;
+            height: 32px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 1rem;
+        }
+        .link-card .bi {
+            font-size: 1.4rem;
+        }
         @media (prefers-color-scheme: dark) {
             body.theme-auto {
-                --theme-bg: #212529;
-                --theme-text: #f8f9fa;
-                --theme-card-bg: #343a40;
+                --theme-bg: #1a1a1a;
+                --theme-text: #ffffff;
+                --theme-card-bg: #2d2d2d;
             }
         }
         body.theme-dark {
-            --theme-bg: #212529;
-            --theme-text: #f8f9fa;
-            --theme-card-bg: #343a40;
+            --theme-bg: #1a1a1a;
+            --theme-text: #ffffff;
+            --theme-card-bg: #2d2d2d;
         }
-        body.theme-light {
-            --theme-bg: #f8f9fa;
-            --theme-text: #212529;
-            --theme-card-bg: #ffffff;
-        }
-        .social-buttons {
-            margin: 1rem 0;
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        .social-button {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        .link-card-content {
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: #fff;
-            text-decoration: none;
+            justify-content: space-between;
+        }
+        .link-card-left {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        .link-card-right {
+            opacity: 0;
             transition: opacity 0.2s;
         }
-        .social-button:hover {
-            opacity: 0.8;
-            color: #fff;
+        .link-card:hover .link-card-right {
+            opacity: 1;
+        }
+        .link-card-right .bi {
+            font-size: 1.2rem;
+            color: var(--theme-color);
         }
     </style>
 </head>
@@ -217,13 +277,12 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
                  alt="<?php echo htmlspecialchars($user['username']); ?>" 
                  class="profile-image">
             
-            <h1 class="h3 mb-2"><?php echo htmlspecialchars($user['profile_title'] ?? $user['username']); ?></h1>
+            <h1 class="profile-title"><?php echo htmlspecialchars($user['profile_title'] ?? $user['username']); ?></h1>
             
             <?php if (!empty($user['profile_description'])): ?>
-                <p class="text-muted mb-4"><?php echo nl2br(htmlspecialchars($user['profile_description'])); ?></p>
+                <p class="profile-description"><?php echo nl2br(htmlspecialchars($user['profile_description'])); ?></p>
             <?php endif; ?>
 
-            <!-- Sosyal Medya Profil Butonları -->
             <?php if (!empty($social_profiles)): ?>
             <div class="social-buttons">
                 <?php foreach ($social_profiles as $profile): ?>
@@ -231,7 +290,7 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
                        target="_blank" 
                        class="social-button" 
                        title="<?php echo htmlspecialchars($profile['platform']); ?>"
-                       style="background-color: var(--theme-color);">
+                       data-bs-toggle="tooltip">
                         <i class="bi bi-<?php echo htmlspecialchars($profile['icon'] ?? strtolower($profile['platform'])); ?>"></i>
                     </a>
                 <?php endforeach; ?>
@@ -245,16 +304,20 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
                    target="_blank" 
                    class="link-card" 
                    onclick="recordClick(<?php echo $link['id']; ?>)">
-                    <div class="d-flex align-items-center">
-                        <?php if (!empty($link['image'])): ?>
-                            <img src="<?php echo htmlspecialchars($link['image']); ?>" 
-                                 alt="" 
-                                 class="me-3"
-                                 style="width: 32px; height: 32px; object-fit: cover; border-radius: 6px;">
-                        <?php else: ?>
-                            <i class="bi bi-link me-3" style="font-size: 1.5rem; color: var(--theme-color);"></i>
-                        <?php endif; ?>
-                        <span><?php echo htmlspecialchars($link['title']); ?></span>
+                    <div class="link-card-content">
+                        <div class="link-card-left">
+                            <?php if (!empty($link['image'])): ?>
+                                <img src="<?php echo htmlspecialchars($link['image']); ?>" 
+                                     alt="" 
+                                     class="link-image">
+                            <?php else: ?>
+                                <i class="bi bi-link me-3" style="color: var(--theme-color);"></i>
+                            <?php endif; ?>
+                            <span class="link-title"><?php echo htmlspecialchars($link['title']); ?></span>
+                        </div>
+                        <div class="link-card-right">
+                            <i class="bi bi-box-arrow-up-right"></i>
+                        </div>
                     </div>
                 </a>
             <?php endforeach; ?>
@@ -271,7 +334,14 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Tooltip'leri etkinleştir
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
         function recordClick(linkId) {
             fetch('/record_click.php', {
                 method: 'POST',
