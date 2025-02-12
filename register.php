@@ -146,6 +146,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- JavaScript -->
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/app.js"></script>
+    <script>
+        // Preloader
+        $(window).on('load', function() {
+            $('#status').fadeOut();
+            $('#preloader').delay(350).fadeOut('slow');
+        });
+    </script>
 </body>
 </html> 

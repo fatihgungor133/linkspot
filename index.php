@@ -150,9 +150,23 @@ require_once 'includes/language.php';
     <script src="js/owl.carousel.min.js"></script>
     <!-- Magnific Popup -->
     <script src="js/jquery.magnific-popup.min.js"></script>
-    <!-- counter -->
-    <script src="js/counter.int.js"></script>
     <!-- custom -->
-    <script src="js/app.js"></script>
+    <script>
+        // Preloader
+        $(window).on('load', function() {
+            $('#status').fadeOut();
+            $('#preloader').delay(350).fadeOut('slow');
+        });
+
+        // Sticky Navbar
+        $(window).scroll(function() {
+            var scroll = $(window).scrollTop();
+            if (scroll >= 50) {
+                $(".sticky").addClass("nav-sticky");
+            } else {
+                $(".sticky").removeClass("nav-sticky");
+            }
+        });
+    </script>
 </body>
 </html> 
