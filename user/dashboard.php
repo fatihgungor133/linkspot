@@ -1,5 +1,6 @@
 <?php
 require_once '../config/database.php';
+require_once '../includes/language.php';
 session_start();
 
 // Oturum kontrolü
@@ -71,18 +72,21 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="profile.php">
-                            <i class="bi bi-person"></i> Profil
+                            <i class="bi bi-person"></i> <?php echo __('profile'); ?>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="settings.php">
                             <i class="bi bi-gear me-2"></i>
-                            Ayarlar
+                            <?php echo __('settings'); ?>
                         </a>
                     </li>
                     <li class="nav-item">
+                        <?php echo language_selector(); ?>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="../logout.php">
-                            <i class="bi bi-box-arrow-right"></i> Çıkış
+                            <i class="bi bi-box-arrow-right"></i> <?php echo __('logout'); ?>
                         </a>
                     </li>
                 </ul>
@@ -129,14 +133,14 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="col-md-9">
                 <div class="card mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Linklerim</h5>
+                        <h5 class="mb-0"><?php echo __('my_links'); ?></h5>
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addLinkModal">
-                            <i class="bi bi-plus"></i> Yeni Link Ekle
+                            <i class="bi bi-plus"></i> <?php echo __('add_link'); ?>
                         </button>
                     </div>
                     <div class="card-body">
                         <?php if (empty($links)): ?>
-                            <p class="text-center text-muted my-5">Henüz link eklenmemiş. Hemen yeni bir link ekleyin!</p>
+                            <p class="text-center text-muted my-5"><?php echo __('no_links_yet'); ?></p>
                         <?php else: ?>
                             <div class="list-group">
                                 <?php foreach ($links as $link): ?>
@@ -153,18 +157,20 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             <span class="ms-2 link-title"><?php echo htmlspecialchars($link['title']); ?></span>
                                             <span class="link-url" data-url="<?php echo htmlspecialchars($link['url']); ?>" style="display: none;"></span>
                                             <?php if (!$link['is_active']): ?>
-                                                <span class="badge bg-secondary ms-2">Pasif</span>
+                                                <span class="badge bg-secondary ms-2"><?php echo __('inactive'); ?></span>
                                             <?php endif; ?>
                                         </div>
                                         <div>
                                             <a href="<?php echo htmlspecialchars($link['url']); ?>" target="_blank" 
-                                               class="btn btn-sm btn-outline-secondary me-1">
+                                               class="btn btn-sm btn-outline-secondary me-1" title="<?php echo __('visit_link'); ?>">
                                                 <i class="bi bi-box-arrow-up-right"></i>
                                             </a>
-                                            <button class="btn btn-sm btn-outline-primary me-1" onclick="editLink(<?php echo $link['id']; ?>)">
+                                            <button class="btn btn-sm btn-outline-primary me-1" onclick="editLink(<?php echo $link['id']; ?>)"
+                                                    title="<?php echo __('edit_link'); ?>">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-outline-danger" onclick="deleteLink(<?php echo $link['id']; ?>)">
+                                            <button class="btn btn-sm btn-outline-danger" onclick="deleteLink(<?php echo $link['id']; ?>)"
+                                                    title="<?php echo __('delete_link'); ?>">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </div>
@@ -178,7 +184,7 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <!-- Ziyaret İstatistikleri -->
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0">Son 7 Gün Ziyaret İstatistikleri</h5>
+                        <h5 class="mb-0"><?php echo __('visit_stats'); ?></h5>
                     </div>
                     <div class="card-body">
                         <canvas id="visitChart"></canvas>
@@ -193,29 +199,29 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Yeni Link Ekle</h5>
+                    <h5 class="modal-title"><?php echo __('add_link'); ?></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="addLinkForm" action="add_link.php" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <label for="title" class="form-label">Başlık</label>
+                            <label for="title" class="form-label"><?php echo __('title'); ?></label>
                             <input type="text" class="form-control" id="title" name="title" required>
                         </div>
                         <div class="mb-3">
-                            <label for="url" class="form-label">URL</label>
+                            <label for="url" class="form-label"><?php echo __('url'); ?></label>
                             <input type="url" class="form-control" id="url" name="url" required>
                         </div>
                         <div class="mb-3">
-                            <label for="image" class="form-label">Görsel</label>
+                            <label for="image" class="form-label"><?php echo __('image'); ?></label>
                             <input type="file" class="form-control" id="image" name="image" accept="image/*">
-                            <small class="text-muted">Önerilen boyut: 100x100 piksel</small>
+                            <small class="text-muted"><?php echo __('recommended_size'); ?>: 100x100 <?php echo __('pixels'); ?></small>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="submit" form="addLinkForm" class="btn btn-primary">Ekle</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo __('cancel'); ?></button>
+                    <button type="submit" form="addLinkForm" class="btn btn-primary"><?php echo __('add'); ?></button>
                 </div>
             </div>
         </div>
@@ -226,37 +232,37 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Link Düzenle</h5>
+                    <h5 class="modal-title"><?php echo __('edit_link'); ?></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="editLinkForm" action="edit_link.php" method="POST" enctype="multipart/form-data">
                         <input type="hidden" id="editLinkId" name="link_id">
                         <div class="mb-3">
-                            <label for="editTitle" class="form-label">Başlık</label>
+                            <label for="editTitle" class="form-label"><?php echo __('title'); ?></label>
                             <input type="text" class="form-control" id="editTitle" name="title" required>
                         </div>
                         <div class="mb-3">
-                            <label for="editUrl" class="form-label">URL</label>
+                            <label for="editUrl" class="form-label"><?php echo __('url'); ?></label>
                             <input type="url" class="form-control" id="editUrl" name="url" required>
                         </div>
                         <div class="mb-3">
-                            <label for="editImage" class="form-label">Görsel</label>
+                            <label for="editImage" class="form-label"><?php echo __('image'); ?></label>
                             <input type="file" class="form-control" id="editImage" name="image" accept="image/*">
-                            <small class="text-muted">Önerilen boyut: 100x100 piksel</small>
+                            <small class="text-muted"><?php echo __('recommended_size'); ?>: 100x100 <?php echo __('pixels'); ?></small>
                             <div id="currentImage" class="mt-2" style="display: none;">
-                                <img src="" alt="Mevcut görsel" style="max-width: 100px; max-height: 100px;">
+                                <img src="" alt="<?php echo __('current_image'); ?>" style="max-width: 100px; max-height: 100px;">
                             </div>
                         </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="editIsActive" name="is_active" value="1">
-                            <label class="form-check-label" for="editIsActive">Aktif</label>
+                            <label class="form-check-label" for="editIsActive"><?php echo __('active'); ?></label>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="submit" form="editLinkForm" class="btn btn-primary">Kaydet</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo __('cancel'); ?></button>
+                    <button type="submit" form="editLinkForm" class="btn btn-primary"><?php echo __('save'); ?></button>
                 </div>
             </div>
         </div>

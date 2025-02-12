@@ -176,7 +176,15 @@ INSERT INTO language_strings (language_id, string_key, string_value) VALUES
 ((SELECT id FROM languages WHERE code = 'en'), 'profile_url', 'Profile URL'),
 ((SELECT id FROM languages WHERE code = 'en'), 'recommended_size', 'Recommended size'),
 ((SELECT id FROM languages WHERE code = 'en'), 'visit_profile', 'Visit Profile'),
-((SELECT id FROM languages WHERE code = 'en'), 'powered_by', 'Powered by');
+((SELECT id FROM languages WHERE code = 'en'), 'powered_by', 'Powered by'),
+((SELECT id FROM languages WHERE code = 'en'), 'my_links', 'My Links'),
+((SELECT id FROM languages WHERE code = 'en'), 'no_links_yet', 'No links yet. Add your first link now!'),
+((SELECT id FROM languages WHERE code = 'en'), 'inactive', 'Inactive'),
+((SELECT id FROM languages WHERE code = 'en'), 'visit_link', 'Visit Link'),
+((SELECT id FROM languages WHERE code = 'en'), 'pixels', 'pixels'),
+((SELECT id FROM languages WHERE code = 'en'), 'current_image', 'Current image'),
+((SELECT id FROM languages WHERE code = 'en'), 'add', 'Add'),
+((SELECT id FROM languages WHERE code = 'en'), 'visit_stats', 'Last 7 Days Visit Statistics');
 
 -- Türkçe metinler
 INSERT INTO language_strings (language_id, string_key, string_value) VALUES
@@ -236,7 +244,15 @@ INSERT INTO language_strings (language_id, string_key, string_value) VALUES
 ((SELECT id FROM languages WHERE code = 'tr'), 'profile_url', 'Profil URL'),
 ((SELECT id FROM languages WHERE code = 'tr'), 'recommended_size', 'Önerilen boyut'),
 ((SELECT id FROM languages WHERE code = 'tr'), 'visit_profile', 'Profili Ziyaret Et'),
-((SELECT id FROM languages WHERE code = 'tr'), 'powered_by', 'Altyapı');
+((SELECT id FROM languages WHERE code = 'tr'), 'powered_by', 'Altyapı'),
+((SELECT id FROM languages WHERE code = 'tr'), 'my_links', 'Linklerim'),
+((SELECT id FROM languages WHERE code = 'tr'), 'no_links_yet', 'Henüz link eklenmemiş. Hemen yeni bir link ekleyin!'),
+((SELECT id FROM languages WHERE code = 'tr'), 'inactive', 'Pasif'),
+((SELECT id FROM languages WHERE code = 'tr'), 'visit_link', 'Linki Ziyaret Et'),
+((SELECT id FROM languages WHERE code = 'tr'), 'pixels', 'piksel'),
+((SELECT id FROM languages WHERE code = 'tr'), 'current_image', 'Mevcut görsel'),
+((SELECT id FROM languages WHERE code = 'tr'), 'add', 'Ekle'),
+((SELECT id FROM languages WHERE code = 'tr'), 'visit_stats', 'Son 7 Gün Ziyaret İstatistikleri');
 
 -- Admin kullanıcısı oluştur (şifre: admin123)
 INSERT INTO users (username, email, password, is_admin) VALUES 
