@@ -1,5 +1,6 @@
 <?php
 require_once '../config/database.php';
+require_once '../includes/language.php';
 session_start();
 
 // JSON yanıt başlığı
@@ -8,14 +9,14 @@ header('Content-Type: application/json');
 // Oturum ve yetki kontrolü
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Oturum açmanız gerekiyor.']);
+    echo json_encode(['success' => false, 'message' => __('session_required')]);
     exit;
 }
 
 // POST metodu kontrolü
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Geçersiz istek metodu.']);
+    echo json_encode(['success' => false, 'message' => __('invalid_request')]);
     exit;
 }
 
@@ -28,19 +29,19 @@ $is_active = isset($_POST['is_active']) ? (int)$_POST['is_active'] : 1;
 // Validasyon
 if (!$link_id) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Geçersiz link ID.']);
+    echo json_encode(['success' => false, 'message' => __('invalid_link_id')]);
     exit;
 }
 
 if (empty($title) || empty($url)) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Başlık ve URL alanları zorunludur.']);
+    echo json_encode(['success' => false, 'message' => __('title_required')]);
     exit;
 }
 
 if (!filter_var($url, FILTER_VALIDATE_URL)) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Geçerli bir URL giriniz.']);
+    echo json_encode(['success' => false, 'message' => __('invalid_url')]);
     exit;
 }
 
@@ -53,7 +54,7 @@ try {
     
     if (!$current_link) {
         http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'Bu linki düzenleme yetkiniz yok.']);
+        echo json_encode(['success' => false, 'message' => __('no_permission')]);
         exit;
     }
 
@@ -65,13 +66,13 @@ try {
         $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         
         if (!in_array($ext, $allowed)) {
-            echo json_encode(['success' => false, 'message' => 'Sadece JPG, PNG ve GIF dosyaları yüklenebilir.']);
+            echo json_encode(['success' => false, 'message' => __('image_type_error')]);
             exit;
         }
 
         // Dosya boyutunu kontrol et (max 2MB)
         if ($_FILES['image']['size'] > 2 * 1024 * 1024) {
-            echo json_encode(['success' => false, 'message' => 'Dosya boyutu 2MB\'dan büyük olamaz.']);
+            echo json_encode(['success' => false, 'message' => __('image_size_error')]);
             exit;
         }
 
@@ -107,7 +108,7 @@ try {
 
     echo json_encode([
         'success' => true,
-        'message' => 'Link başarıyla güncellendi.',
+        'message' => __('link_updated'),
         'link' => [
             'id' => $link_id,
             'title' => $title,
@@ -119,5 +120,5 @@ try {
 
 } catch(PDOException $e) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Link güncellenirken bir hata oluştu.']);
+    echo json_encode(['success' => false, 'message' => __('link_update_error')]);
 } 

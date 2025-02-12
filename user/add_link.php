@@ -1,5 +1,6 @@
 <?php
 require_once '../config/database.php';
+require_once '../includes/language.php';
 session_start();
 
 // JSON yanıt başlığı
@@ -12,7 +13,7 @@ ini_set('display_errors', 1);
 // Oturum ve AJAX kontrolü
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Oturum açmanız gerekiyor.']);
+    echo json_encode(['success' => false, 'message' => __('session_required')]);
     exit;
 }
 
@@ -23,17 +24,17 @@ try {
     
     // Validasyon
     if (empty($title)) {
-        echo json_encode(['success' => false, 'message' => 'Başlık alanı zorunludur.']);
+        echo json_encode(['success' => false, 'message' => __('title_required')]);
         exit;
     }
 
     if (empty($url)) {
-        echo json_encode(['success' => false, 'message' => 'URL alanı zorunludur.']);
+        echo json_encode(['success' => false, 'message' => __('url_required')]);
         exit;
     }
 
     if (!filter_var($url, FILTER_VALIDATE_URL)) {
-        echo json_encode(['success' => false, 'message' => 'Geçerli bir URL giriniz.']);
+        echo json_encode(['success' => false, 'message' => __('invalid_url')]);
         exit;
     }
 
@@ -45,13 +46,13 @@ try {
         $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         
         if (!in_array($ext, $allowed)) {
-            echo json_encode(['success' => false, 'message' => 'Sadece JPG, PNG ve GIF dosyaları yüklenebilir.']);
+            echo json_encode(['success' => false, 'message' => __('image_type_error')]);
             exit;
         }
 
         // Dosya boyutunu kontrol et (max 2MB)
         if ($_FILES['image']['size'] > 2 * 1024 * 1024) {
-            echo json_encode(['success' => false, 'message' => 'Dosya boyutu 2MB\'dan büyük olamaz.']);
+            echo json_encode(['success' => false, 'message' => __('image_size_error')]);
             exit;
         }
 
@@ -92,7 +93,7 @@ try {
 
     echo json_encode([
         'success' => true,
-        'message' => 'Link başarıyla eklendi.',
+        'message' => __('link_added'),
         'link' => $link
     ]);
 
@@ -100,14 +101,14 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false, 
-        'message' => 'Link eklenirken bir hata oluştu.',
+        'message' => __('link_add_error'),
         'error' => $e->getMessage()
     ]);
 } catch(Exception $e) {
     http_response_code(500);
     echo json_encode([
         'success' => false, 
-        'message' => 'Beklenmeyen bir hata oluştu.',
+        'message' => __('unexpected_error'),
         'error' => $e->getMessage()
     ]);
 } 

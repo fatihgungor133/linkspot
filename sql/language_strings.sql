@@ -11,7 +11,23 @@ INSERT INTO language_strings (language_id, string_key, string_value) VALUES
 ((SELECT id FROM languages WHERE code = 'en'), 'profiles_dir_not_writable', 'No write permission to profiles directory'),
 ((SELECT id FROM languages WHERE code = 'en'), 'unknown_error', 'Unknown error'),
 ((SELECT id FROM languages WHERE code = 'en'), 'profile_image_updated', 'Profile image successfully updated.'),
-((SELECT id FROM languages WHERE code = 'en'), 'profile_image_update_error', 'An error occurred while uploading profile image');
+((SELECT id FROM languages WHERE code = 'en'), 'profile_image_update_error', 'An error occurred while uploading profile image'),
+((SELECT id FROM languages WHERE code = 'en'), 'title_required', 'Title field is required.'),
+((SELECT id FROM languages WHERE code = 'en'), 'url_required', 'URL field is required.'),
+((SELECT id FROM languages WHERE code = 'en'), 'invalid_url', 'Please enter a valid URL.'),
+((SELECT id FROM languages WHERE code = 'en'), 'image_type_error', 'Only JPG, PNG and GIF files are allowed.'),
+((SELECT id FROM languages WHERE code = 'en'), 'image_size_error', 'File size cannot be larger than 2MB.'),
+((SELECT id FROM languages WHERE code = 'en'), 'link_added', 'Link successfully added.'),
+((SELECT id FROM languages WHERE code = 'en'), 'link_add_error', 'An error occurred while adding the link.'),
+((SELECT id FROM languages WHERE code = 'en'), 'unexpected_error', 'An unexpected error occurred.'),
+((SELECT id FROM languages WHERE code = 'en'), 'invalid_link_id', 'Invalid link ID.'),
+((SELECT id FROM languages WHERE code = 'en'), 'no_permission', 'You do not have permission to delete this link.'),
+((SELECT id FROM languages WHERE code = 'en'), 'link_deleted', 'Link successfully deleted.'),
+((SELECT id FROM languages WHERE code = 'en'), 'link_delete_error', 'An error occurred while deleting the link.'),
+((SELECT id FROM languages WHERE code = 'en'), 'link_updated', 'Link successfully updated.'),
+((SELECT id FROM languages WHERE code = 'en'), 'link_update_error', 'An error occurred while updating the link.'),
+((SELECT id FROM languages WHERE code = 'en'), 'link_not_found', 'Link not found.'),
+((SELECT id FROM languages WHERE code = 'en'), 'invalid_request', 'Invalid request method.');
 
 -- Türkçe çeviriler
 INSERT INTO language_strings (language_id, string_key, string_value) VALUES 
@@ -26,4 +42,20 @@ INSERT INTO language_strings (language_id, string_key, string_value) VALUES
 ((SELECT id FROM languages WHERE code = 'tr'), 'profiles_dir_not_writable', 'Profiles dizinine yazma izni yok'),
 ((SELECT id FROM languages WHERE code = 'tr'), 'unknown_error', 'Bilinmeyen hata'),
 ((SELECT id FROM languages WHERE code = 'tr'), 'profile_image_updated', 'Profil resmi başarıyla güncellendi.'),
-((SELECT id FROM languages WHERE code = 'tr'), 'profile_image_update_error', 'Profil resmi yüklenirken bir hata oluştu'); 
+((SELECT id FROM languages WHERE code = 'tr'), 'profile_image_update_error', 'Profil resmi yüklenirken bir hata oluştu'),
+((SELECT id FROM languages WHERE code = 'tr'), 'title_required', 'Başlık alanı zorunludur.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'url_required', 'URL alanı zorunludur.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'invalid_url', 'Geçerli bir URL giriniz.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'image_type_error', 'Sadece JPG, PNG ve GIF dosyaları yüklenebilir.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'image_size_error', 'Dosya boyutu 2MB\'dan büyük olamaz.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'link_added', 'Link başarıyla eklendi.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'link_add_error', 'Link eklenirken bir hata oluştu.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'unexpected_error', 'Beklenmeyen bir hata oluştu.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'invalid_link_id', 'Geçersiz link ID.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'no_permission', 'Bu linki silme yetkiniz yok.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'link_deleted', 'Link başarıyla silindi.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'link_delete_error', 'Link silinirken bir hata oluştu.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'link_updated', 'Link başarıyla güncellendi.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'link_update_error', 'Link güncellenirken bir hata oluştu.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'link_not_found', 'Link bulunamadı.'),
+((SELECT id FROM languages WHERE code = 'tr'), 'invalid_request', 'Geçersiz istek metodu.'); 
