@@ -117,12 +117,12 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <div class="card">
                     <div class="card-body">
-                        <h6 class="card-title">Hızlı İstatistikler</h6>
-                        <p class="mb-2">Toplam Link: <?php echo count($links); ?></p>
-                        <p class="mb-2">Aktif Link: <?php echo array_reduce($links, function($carry, $link) {
+                        <h6 class="card-title"><?php echo __('quick_stats'); ?></h6>
+                        <p class="mb-2"><?php echo __('total_links'); ?>: <?php echo count($links); ?></p>
+                        <p class="mb-2"><?php echo __('active_links'); ?>: <?php echo array_reduce($links, function($carry, $link) {
                             return $carry + ($link['is_active'] ? 1 : 0);
                         }, 0); ?></p>
-                        <p class="mb-0">Son 7 Gün Ziyaret: <?php echo array_reduce($visits, function($carry, $visit) {
+                        <p class="mb-0"><?php echo __('last_7_days_visits'); ?>: <?php echo array_reduce($visits, function($carry, $visit) {
                             return $carry + $visit['visit_count'];
                         }, 0); ?></p>
                     </div>
