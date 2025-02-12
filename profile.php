@@ -108,26 +108,26 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         .profile-container {
-            max-width: 1000px;
+            max-width: 800px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
         .profile-header {
             text-align: center;
             margin-bottom: 2.5rem;
-            padding: 2.5rem;
+            padding: 2rem;
             background: var(--theme-card-bg);
-            border-radius: 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
         .profile-image {
-            width: 200px;
-            height: 200px;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 2rem;
-            border: 5px solid var(--theme-color);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            margin-bottom: 1.5rem;
+            border: 4px solid var(--theme-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
         }
         .profile-image:hover {
@@ -136,18 +136,18 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
         .link-card {
             background: var(--theme-card-bg);
             border: none;
-            border-radius: 20px;
-            padding: 1.5rem;
-            margin-bottom: 1.2rem;
+            border-radius: 15px;
+            padding: 1.25rem 2rem;
+            margin-bottom: 1rem;
             transition: transform 0.2s, box-shadow 0.2s;
             text-decoration: none;
             color: var(--theme-text);
             display: block;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
         .link-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
         .footer {
             margin-top: auto;
@@ -155,17 +155,17 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             padding: 2rem;
             color: #6c757d;
             background: var(--theme-card-bg);
-            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
         }
         .share-buttons {
-            margin: 2rem 0;
+            margin: 1.5rem 0;
             display: flex;
             justify-content: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
         .share-button {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -173,23 +173,23 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             color: #fff;
             text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
         }
         .share-button:hover {
             opacity: 0.9;
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             color: #fff;
         }
         .social-buttons {
-            margin: 2rem 0;
+            margin: 1.5rem 0;
             display: flex;
             justify-content: center;
-            gap: 1rem;
+            gap: 0.75rem;
             flex-wrap: wrap;
         }
         .social-button {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -197,45 +197,45 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             color: #fff;
             text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             background-color: var(--theme-color);
         }
         .social-button:hover {
             opacity: 0.9;
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             color: #fff;
         }
         .profile-title {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             color: var(--theme-text);
         }
         .profile-description {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #6c757d;
-            max-width: 800px;
-            margin: 0 auto 2rem;
-            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.6;
         }
         .links-container {
             padding: 0.5rem;
-            max-width: 900px;
+            max-width: 700px;
             margin: 0 auto;
         }
         .link-card .link-title {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 500;
         }
         .link-card .link-image {
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             object-fit: cover;
-            border-radius: 10px;
-            margin-right: 1.2rem;
+            border-radius: 8px;
+            margin-right: 1rem;
         }
         .link-card .bi {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
         }
         .link-card-content {
             display: flex;
