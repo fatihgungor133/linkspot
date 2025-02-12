@@ -18,6 +18,12 @@ $stmt = $db->prepare($query);
 $stmt->execute([$user_id]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Sosyal medya profillerini al
+$social_query = "SELECT * FROM social_profiles WHERE user_id = ? ORDER BY order_number ASC";
+$stmt = $db->prepare($social_query);
+$stmt->execute([$user_id]);
+$social_profiles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // Form gönderildiğinde
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $profile_title = trim($_POST['profile_title']);
@@ -76,12 +82,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = $db->prepare($update_query);
         $stmt->execute($params);
 
+        // Sosyal medya profillerini güncelle
+        if (isset($_POST['social_profiles'])) {
+            // Önce tüm profilleri pasife çek
+            $update_query = "UPDATE social_profiles SET is_active = 0 WHERE user_id = ?";
+            $stmt = $db->prepare($update_query);
+            $stmt->execute([$user_id]);
+
+            foreach ($_POST['social_profiles'] as $index => $profile) {
+                if (empty($profile['platform']) || empty($profile['username']) || empty($profile['url'])) {
+                    continue;
+                }
+
+                if (!empty($profile['id'])) {
+                    // Mevcut profili güncelle
+                    $update_query = "UPDATE social_profiles SET 
+                                    platform = ?, 
+                                    username = ?, 
+                                    url = ?, 
+                                    icon = ?,
+                                    order_number = ?,
+                                    is_active = 1
+                                    WHERE id = ? AND user_id = ?";
+                    $stmt = $db->prepare($update_query);
+                    $stmt->execute([
+                        $profile['platform'],
+                        $profile['username'],
+                        $profile['url'],
+                        $profile['icon'],
+                        $index,
+                        $profile['id'],
+                        $user_id
+                    ]);
+                } else {
+                    // Yeni profil ekle
+                    $insert_query = "INSERT INTO social_profiles 
+                                    (user_id, platform, username, url, icon, order_number, is_active) 
+                                    VALUES (?, ?, ?, ?, ?, ?, 1)";
+                    $stmt = $db->prepare($insert_query);
+                    $stmt->execute([
+                        $user_id,
+                        $profile['platform'],
+                        $profile['username'],
+                        $profile['url'],
+                        $profile['icon'],
+                        $index
+                    ]);
+                }
+            }
+        }
+
         $success_message = 'Profil bilgileriniz başarıyla güncellendi.';
         
         // Güncel kullanıcı bilgilerini al
         $stmt = $db->prepare($query);
         $stmt->execute([$user_id]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Güncel sosyal medya profillerini al
+        $stmt = $db->prepare($social_query);
     } catch(PDOException $e) {
         $error_message = 'Profil güncellenirken bir hata oluştu.';
     }

@@ -40,6 +40,12 @@ $stmt = $db->prepare($links_query);
 $stmt->execute([$user['id']]);
 $links = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Kullanıcının sosyal medya profillerini al
+$social_query = "SELECT * FROM social_profiles WHERE user_id = ? AND is_active = 1 ORDER BY order_number ASC";
+$stmt = $db->prepare($social_query);
+$stmt->execute([$user['id']]);
+$social_profiles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // Ziyaret kaydı ekle
 $ip = $_SERVER['REMOTE_ADDR'];
 $user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -165,6 +171,27 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
             --theme-text: #212529;
             --theme-card-bg: #ffffff;
         }
+        .social-buttons {
+            margin: 1rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .social-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .social-button:hover {
+            opacity: 0.8;
+            color: #fff;
+        }
     </style>
 </head>
 <body class="theme-<?php echo $user['theme_style'] ?? 'auto'; ?>">
@@ -180,43 +207,20 @@ $meta_description = substr(strip_tags($meta_description), 0, 160);
                 <p class="text-muted mb-4"><?php echo nl2br(htmlspecialchars($user['profile_description'])); ?></p>
             <?php endif; ?>
 
-            <!-- Sosyal Medya Paylaşım Butonları -->
-            <div class="share-buttons">
-                <?php
-                $share_url = urlencode("https://$_SERVER[HTTP_HOST]/$username");
-                $share_title = urlencode($user['profile_title'] ?? $user['username']);
-                ?>
-                <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $share_url; ?>" 
-                   target="_blank" 
-                   class="share-button share-facebook" 
-                   title="Facebook'ta Paylaş">
-                    <i class="bi bi-facebook"></i>
-                </a>
-                <a href="https://twitter.com/intent/tweet?url=<?php echo $share_url; ?>&text=<?php echo $share_title; ?>" 
-                   target="_blank" 
-                   class="share-button share-twitter" 
-                   title="Twitter'da Paylaş">
-                    <i class="bi bi-twitter"></i>
-                </a>
-                <a href="https://wa.me/?text=<?php echo $share_title . '%20' . $share_url; ?>" 
-                   target="_blank" 
-                   class="share-button share-whatsapp" 
-                   title="WhatsApp'ta Paylaş">
-                    <i class="bi bi-whatsapp"></i>
-                </a>
-                <a href="https://t.me/share/url?url=<?php echo $share_url; ?>&text=<?php echo $share_title; ?>" 
-                   target="_blank" 
-                   class="share-button share-telegram" 
-                   title="Telegram'da Paylaş">
-                    <i class="bi bi-telegram"></i>
-                </a>
-                <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo $share_url; ?>&title=<?php echo $share_title; ?>" 
-                   target="_blank" 
-                   class="share-button share-linkedin" 
-                   title="LinkedIn'de Paylaş">
-                    <i class="bi bi-linkedin"></i>
-                </a>
+            <!-- Sosyal Medya Profil Butonları -->
+            <?php if (!empty($social_profiles)): ?>
+            <div class="social-buttons">
+                <?php foreach ($social_profiles as $profile): ?>
+                    <a href="<?php echo htmlspecialchars($profile['url']); ?>" 
+                       target="_blank" 
+                       class="social-button" 
+                       title="<?php echo htmlspecialchars($profile['platform']); ?>"
+                       style="background-color: var(--theme-color);">
+                        <i class="bi bi-<?php echo htmlspecialchars($profile['icon'] ?? strtolower($profile['platform'])); ?>"></i>
+                    </a>
+                <?php endforeach; ?>
             </div>
+            <?php endif; ?>
         </div>
 
         <div class="links-container">
