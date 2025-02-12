@@ -72,8 +72,8 @@ require_once 'includes/language.php';
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
                             <i class="bi bi-link feature-icon"></i>
-                            <h3>Sınırsız Link</h3>
-                            <p class="text-muted">İstediğiniz kadar link ekleyebilir ve düzenleyebilirsiniz.</p>
+                            <h3><?php echo __('unlimited_links'); ?></h3>
+                            <p class="text-muted"><?php echo __('unlimited_links_desc'); ?></p>
                         </div>
                     </div>
                 </div>
@@ -81,8 +81,8 @@ require_once 'includes/language.php';
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
                             <i class="bi bi-palette feature-icon"></i>
-                            <h3>Özelleştirilebilir Tema</h3>
-                            <p class="text-muted">Profilinizi istediğiniz gibi özelleştirebilirsiniz.</p>
+                            <h3><?php echo __('custom_theme'); ?></h3>
+                            <p class="text-muted"><?php echo __('custom_theme_desc'); ?></p>
                         </div>
                     </div>
                 </div>
@@ -90,8 +90,8 @@ require_once 'includes/language.php';
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
                             <i class="bi bi-graph-up feature-icon"></i>
-                            <h3>Detaylı İstatistikler</h3>
-                            <p class="text-muted">Ziyaretçi ve tıklama istatistiklerini takip edebilirsiniz.</p>
+                            <h3><?php echo __('detailed_stats'); ?></h3>
+                            <p class="text-muted"><?php echo __('detailed_stats_desc'); ?></p>
                         </div>
                     </div>
                 </div>
