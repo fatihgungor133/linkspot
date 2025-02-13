@@ -124,7 +124,10 @@ INSERT INTO language_strings (language_id, string_key, string_value) VALUES
 ((SELECT id FROM languages WHERE code = 'en'), 'no_keep_editing', 'No, keep editing'),
 ((SELECT id FROM languages WHERE code = 'en'), 'invalid_image_url', 'Please enter a valid image URL.'),
 ((SELECT id FROM languages WHERE code = 'en'), 'image_download_error', 'Could not download image from URL.'),
-((SELECT id FROM languages WHERE code = 'en'), 'image_url', 'Image URL');
+((SELECT id FROM languages WHERE code = 'en'), 'image_url', 'Image URL'),
+((SELECT id FROM languages WHERE code = 'en'), 'invalid_image_url', 'Invalid image URL'),
+((SELECT id FROM languages WHERE code = 'en'), 'image_download_error', 'Error downloading image from URL'),
+((SELECT id FROM languages WHERE code = 'en'), 'image_type_error', 'Invalid image type. Allowed types: jpg, jpeg, png, gif');
 
 -- Türkçe çeviriler
 INSERT INTO language_strings (language_id, string_key, string_value) VALUES 
@@ -249,4 +252,7 @@ INSERT INTO language_strings (language_id, string_key, string_value) VALUES
 ((SELECT id FROM languages WHERE code = 'tr'), 'no_keep_editing', 'Hayır, düzenlemeye devam et'),
 ((SELECT id FROM languages WHERE code = 'tr'), 'invalid_image_url', 'Lütfen geçerli bir görsel URL\'si girin.'),
 ((SELECT id FROM languages WHERE code = 'tr'), 'image_download_error', 'URL\'den görsel indirilemedi.'),
-((SELECT id FROM languages WHERE code = 'tr'), 'image_url', 'Görsel URL\'si'); 
+((SELECT id FROM languages WHERE code = 'tr'), 'image_url', 'Görsel URL'),
+((SELECT id FROM languages WHERE code = 'tr'), 'invalid_image_url', 'Geçersiz görsel URL'),
+((SELECT id FROM languages WHERE code = 'tr'), 'image_download_error', 'URL\'den görsel indirilirken hata oluştu'),
+((SELECT id FROM languages WHERE code = 'tr'), 'image_type_error', 'Geçersiz görsel türü. İzin verilen türler: jpg, jpeg, png, gif'); 

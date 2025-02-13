@@ -214,7 +214,8 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                         <div class="mb-3">
                             <label for="image" class="form-label"><?php echo __('image'); ?></label>
-                            <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            <input type="file" class="form-control mb-2" id="image" name="image" accept="image/*">
+                            <input type="text" class="form-control" id="image_url" name="image_url" placeholder="<?php echo __('image_url'); ?>">
                             <small class="text-muted"><?php echo __('recommended_size'); ?>: 100x100 <?php echo __('pixels'); ?></small>
                         </div>
                     </form>
