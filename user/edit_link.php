@@ -59,6 +59,8 @@ try {
     }
 
     // URL ile görsel ekleme
+    $image_path = $current_link['image']; // Mevcut görsel yolunu koru
+
     if (!empty($_POST['image_url'])) {
         $image_url = trim($_POST['image_url']);
         
@@ -125,6 +127,9 @@ try {
                 unlink('../' . $current_link['image']);
             }
             $image_path = 'uploads/links/' . $new_filename;
+        } else {
+            echo json_encode(['success' => false, 'message' => __('upload_error')]);
+            exit;
         }
     }
     // Dosya yükleme ile görsel ekleme
@@ -160,6 +165,9 @@ try {
                 unlink('../' . $current_link['image']);
             }
             $image_path = 'uploads/links/' . $new_filename;
+        } else {
+            echo json_encode(['success' => false, 'message' => __('upload_error')]);
+            exit;
         }
     }
 

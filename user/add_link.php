@@ -104,6 +104,9 @@ try {
         // Görseli kaydet
         if (file_put_contents($upload_path, $image_content)) {
             $image_path = 'uploads/links/' . $new_filename;
+        } else {
+            echo json_encode(['success' => false, 'message' => __('upload_error')]);
+            exit;
         }
     }
     // Dosya yükleme ile görsel ekleme
@@ -135,7 +138,12 @@ try {
         
         if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
             $image_path = 'uploads/links/' . $new_filename;
+        } else {
+            echo json_encode(['success' => false, 'message' => __('upload_error')]);
+            exit;
         }
+    } else {
+        $image_path = null;
     }
 
     // Önce mevcut linklerin sırasını bir artır
