@@ -51,13 +51,37 @@ try {
             exit;
         }
         
-        // Görsel uzantısını kontrol et
-        $ext = strtolower(pathinfo($image_url, PATHINFO_EXTENSION));
-        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+        // URL'den görseli indir ve içerik türünü kontrol et
+        $headers = get_headers($image_url, 1);
+        $content_type = $headers['Content-Type'];
         
-        if (!in_array($ext, $allowed)) {
+        if (is_array($content_type)) {
+            $content_type = end($content_type);
+        }
+        
+        $allowed_types = [
+            'image/jpeg',
+            'image/jpg',
+            'image/png',
+            'image/gif'
+        ];
+        
+        if (!in_array(strtolower($content_type), $allowed_types)) {
             echo json_encode(['success' => false, 'message' => __('image_type_error')]);
             exit;
+        }
+        
+        // Uzantıyı content type'a göre belirle
+        $ext = 'jpg';
+        switch($content_type) {
+            case 'image/png':
+                $ext = 'png';
+                break;
+            case 'image/gif':
+                $ext = 'gif';
+                break;
+            default:
+                $ext = 'jpg';
         }
         
         // Uploads klasörünü kontrol et ve oluştur
