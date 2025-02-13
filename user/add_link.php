@@ -1,7 +1,10 @@
 <?php
 require_once '../config/database.php';
 require_once '../includes/language.php';
-session_start();
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // JSON yanıt başlığı
 header('Content-Type: application/json');
@@ -63,7 +66,9 @@ try {
         file_put_contents($temp_file, $image_content);
         
         // Görsel türünü kontrol et
-        $mime_type = mime_content_type($temp_file);
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime_type = finfo_file($finfo, $temp_file);
+        finfo_close($finfo);
         
         $allowed_types = [
             'image/jpeg',
