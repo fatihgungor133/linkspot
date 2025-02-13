@@ -52,9 +52,28 @@ try {
         }
         
         // URL'den görseli indir ve içerik türünü kontrol et
-        $headers = get_headers($image_url, 1);
-        $content_type = $headers['Content-Type'];
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'HEAD',
+                'follow_location' => 1,
+                'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            ]
+        ]);
         
+        $headers = @get_headers($image_url, 1, $context);
+        if ($headers === false) {
+            echo json_encode(['success' => false, 'message' => __('image_download_error')]);
+            exit;
+        }
+        
+        // HTTP durum kodunu kontrol et
+        $status_line = $headers[0];
+        if (!preg_match("/200/", $status_line)) {
+            echo json_encode(['success' => false, 'message' => __('image_download_error')]);
+            exit;
+        }
+        
+        $content_type = $headers['Content-Type'];
         if (is_array($content_type)) {
             $content_type = end($content_type);
         }
