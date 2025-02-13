@@ -119,7 +119,7 @@ try {
         if (copy($temp_file, $upload_path)) {
             chmod($upload_path, 0644);
             unlink($temp_file);
-            $image_path = str_replace('../', '', $upload_path);
+            $image_path = 'uploads/links/' . $new_filename;
         } else {
             unlink($temp_file);
             echo json_encode(['success' => false, 'message' => __('upload_error')]);
@@ -165,7 +165,7 @@ try {
         
         if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
             chmod($upload_path, 0644);
-            $image_path = str_replace('../', '', $upload_path);
+            $image_path = 'uploads/links/' . $new_filename;
         } else {
             echo json_encode(['success' => false, 'message' => __('upload_error')]);
             exit;
