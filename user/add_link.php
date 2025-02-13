@@ -58,9 +58,12 @@ try {
             exit;
         }
 
+        // Geçici dosya oluştur
+        $temp_file = tempnam(sys_get_temp_dir(), 'img_');
+        file_put_contents($temp_file, $image_content);
+        
         // Görsel türünü kontrol et
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mime_type = $finfo->buffer($image_content);
+        $mime_type = mime_content_type($temp_file);
         
         $allowed_types = [
             'image/jpeg',
@@ -70,6 +73,7 @@ try {
         ];
         
         if (!in_array(strtolower($mime_type), $allowed_types)) {
+            unlink($temp_file);
             echo json_encode(['success' => false, 'message' => __('image_type_error')]);
             exit;
         }
@@ -91,6 +95,7 @@ try {
         $uploads_dir = '../uploads/links';
         if (!file_exists($uploads_dir)) {
             if (!mkdir($uploads_dir, 0777, true)) {
+                unlink($temp_file);
                 echo json_encode(['success' => false, 'message' => __('upload_error')]);
                 exit;
             }
@@ -102,18 +107,20 @@ try {
         $upload_path = $uploads_dir . '/' . $new_filename;
         
         // Görseli kaydet
-        if (file_put_contents($upload_path, $image_content)) {
+        if (copy($temp_file, $upload_path)) {
             chmod($upload_path, 0644);
+            unlink($temp_file);
             $image_path = str_replace('../', '', $upload_path);
         } else {
+            unlink($temp_file);
             echo json_encode(['success' => false, 'message' => __('upload_error')]);
             exit;
         }
     }
     // Dosya yükleme ile görsel ekleme
     else if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mime_type = $finfo->file($_FILES['image']['tmp_name']);
+        // Görsel türünü kontrol et
+        $mime_type = mime_content_type($_FILES['image']['tmp_name']);
         
         $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
         
