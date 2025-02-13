@@ -72,11 +72,11 @@ try {
     }
 
     // Mevcut en yüksek sıra numarasını bul
-    $order_query = "SELECT COALESCE(MAX(order_number), 0) as max_order FROM links WHERE user_id = ?";
+    $order_query = "SELECT COALESCE(MIN(order_number), 0) as min_order FROM links WHERE user_id = ?";
     $stmt = $db->prepare($order_query);
     $stmt->execute([$user_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    $next_order = $result['max_order'] + 1;
+    $next_order = $result['min_order'] - 1;
 
     // Yeni linki ekle
     $insert_query = "INSERT INTO links (user_id, title, url, image, order_number, is_active) VALUES (?, ?, ?, ?, ?, 1)";
