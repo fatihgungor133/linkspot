@@ -42,8 +42,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $theme_style = trim($_POST['theme_style']);
     
     try {
-        // Profil resmi yükleme işlemi
-        if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == 0) {
+        // URL ile görsel yükleme işlemi
+        if (!empty($_POST['image_url'])) {
+            $image_url = trim($_POST['image_url']);
+            
+            // URL'nin geçerli olup olmadığını kontrol et
+            if (!filter_var($image_url, FILTER_VALIDATE_URL)) {
+                throw new Exception(__('invalid_image_url'));
+            }
+            
+            // Görsel uzantısını kontrol et
+            $ext = strtolower(pathinfo($image_url, PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+            
+            if (!in_array($ext, $allowed)) {
+                throw new Exception(__('image_type_error'));
+            }
+            
+            // Uploads klasörünü kontrol et ve oluştur
+            if (!file_exists('../uploads/profiles')) {
+                mkdir('../uploads/profiles', 0777, true);
+            }
+            
+            // Benzersiz dosya adı oluştur
+            $new_filename = uniqid() . '.' . $ext;
+            $upload_path = '../uploads/profiles/' . $new_filename;
+            
+            // URL'den görseli indir
+            $image_content = @file_get_contents($image_url);
+            if ($image_content === false) {
+                throw new Exception(__('image_download_error'));
+            }
+            
+            // Görseli kaydet
+            if (file_put_contents($upload_path, $image_content)) {
+                // Eski profil resmini sil
+                if ($user['profile_image'] && file_exists('../' . $user['profile_image'])) {
+                    unlink('../' . $user['profile_image']);
+                }
+                $profile_image = 'uploads/profiles/' . $new_filename;
+            }
+        }
+        // Dosya yükleme ile görsel ekleme
+        else if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == 0) {
             $allowed = ['jpg', 'jpeg', 'png', 'gif'];
             $filename = $_FILES['profile_image']['name'];
             $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
@@ -248,9 +289,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <input type="file" class="form-control d-none" id="profile_image" name="profile_image" 
                                            accept="image/jpeg,image/png,image/gif"
                                            onchange="uploadProfileImage(this)">
-                                    <label for="profile_image" class="btn btn-outline-primary">
-                                        <i class="bi bi-camera"></i> <?php echo __('change_profile_image'); ?>
-                                    </label>
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control mb-2" id="image_url" name="image_url" 
+                                               placeholder="<?php echo __('image_url'); ?>">
+                                    </div>
+                                    <button type="button" class="btn btn-primary" onclick="document.getElementById('profile_image').click()">
+                                        <i class="bi bi-upload"></i> <?php echo __('change_profile_image'); ?>
+                                    </button>
                                 </div>
                             </div>
 
