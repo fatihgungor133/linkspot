@@ -70,32 +70,16 @@ try {
             exit;
         }
         
-        // URL'den görseli indir ve içerik türünü kontrol et
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'HEAD',
-                'follow_location' => 1,
-                'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-            ]
-        ]);
-        
-        $headers = @get_headers($image_url, 1, $context);
-        if ($headers === false) {
+        // URL'den görseli indir
+        $image_content = @file_get_contents($image_url);
+        if ($image_content === false) {
             echo json_encode(['success' => false, 'message' => __('image_download_error')]);
             exit;
         }
-        
-        // HTTP durum kodunu kontrol et
-        $status_line = $headers[0];
-        if (!preg_match("/200/", $status_line)) {
-            echo json_encode(['success' => false, 'message' => __('image_download_error')]);
-            exit;
-        }
-        
-        $content_type = $headers['Content-Type'];
-        if (is_array($content_type)) {
-            $content_type = end($content_type);
-        }
+
+        // Görsel türünü kontrol et
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime_type = $finfo->buffer($image_content);
         
         $allowed_types = [
             'image/jpeg',
@@ -104,14 +88,14 @@ try {
             'image/gif'
         ];
         
-        if (!in_array(strtolower($content_type), $allowed_types)) {
+        if (!in_array(strtolower($mime_type), $allowed_types)) {
             echo json_encode(['success' => false, 'message' => __('image_type_error')]);
             exit;
         }
         
-        // Uzantıyı content type'a göre belirle
+        // Uzantıyı mime type'a göre belirle
         $ext = 'jpg';
-        switch($content_type) {
+        switch($mime_type) {
             case 'image/png':
                 $ext = 'png';
                 break;
@@ -125,22 +109,20 @@ try {
         // Uploads klasörünü kontrol et ve oluştur
         $uploads_dir = '../uploads/links';
         if (!file_exists($uploads_dir)) {
-            mkdir($uploads_dir, 0777, true);
+            if (!mkdir($uploads_dir, 0777, true)) {
+                echo json_encode(['success' => false, 'message' => __('upload_error')]);
+                exit;
+            }
+            chmod($uploads_dir, 0777);
         }
         
         // Benzersiz dosya adı oluştur
         $new_filename = uniqid('link_') . '.' . $ext;
         $upload_path = $uploads_dir . '/' . $new_filename;
         
-        // URL'den görseli indir
-        $image_content = @file_get_contents($image_url);
-        if ($image_content === false) {
-            echo json_encode(['success' => false, 'message' => __('image_download_error')]);
-            exit;
-        }
-        
         // Görseli kaydet
         if (file_put_contents($upload_path, $image_content)) {
+            chmod($upload_path, 0644);
             // Eski görseli sil
             if ($current_link['image'] && file_exists('../' . $current_link['image'])) {
                 unlink('../' . $current_link['image']);
@@ -153,11 +135,12 @@ try {
     }
     // Dosya yükleme ile görsel ekleme
     else if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
-        $filename = $_FILES['image']['name'];
-        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime_type = $finfo->file($_FILES['image']['tmp_name']);
         
-        if (!in_array($ext, $allowed)) {
+        $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        
+        if (!in_array($mime_type, $allowed_types)) {
             echo json_encode(['success' => false, 'message' => __('image_type_error')]);
             exit;
         }
@@ -168,10 +151,27 @@ try {
             exit;
         }
 
+        // Uzantıyı mime type'a göre belirle
+        $ext = 'jpg';
+        switch($mime_type) {
+            case 'image/png':
+                $ext = 'png';
+                break;
+            case 'image/gif':
+                $ext = 'gif';
+                break;
+            default:
+                $ext = 'jpg';
+        }
+
         // Uploads klasörünü kontrol et ve oluştur
         $uploads_dir = '../uploads/links';
         if (!file_exists($uploads_dir)) {
-            mkdir($uploads_dir, 0777, true);
+            if (!mkdir($uploads_dir, 0777, true)) {
+                echo json_encode(['success' => false, 'message' => __('upload_error')]);
+                exit;
+            }
+            chmod($uploads_dir, 0777);
         }
 
         // Benzersiz dosya adı oluştur
@@ -179,6 +179,7 @@ try {
         $upload_path = $uploads_dir . '/' . $new_filename;
         
         if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
+            chmod($upload_path, 0644);
             // Eski görseli sil
             if ($current_link['image'] && file_exists('../' . $current_link['image'])) {
                 unlink('../' . $current_link['image']);
