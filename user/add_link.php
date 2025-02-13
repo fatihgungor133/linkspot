@@ -103,7 +103,7 @@ try {
         
         // Görseli kaydet
         if (file_put_contents($upload_path, $image_content)) {
-            $image_path = 'uploads/links/' . $new_filename;
+            $image_path = str_replace('../', '', $upload_path);
         } else {
             echo json_encode(['success' => false, 'message' => __('upload_error')]);
             exit;
@@ -137,7 +137,7 @@ try {
         $upload_path = $uploads_dir . '/' . $new_filename;
         
         if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_path)) {
-            $image_path = 'uploads/links/' . $new_filename;
+            $image_path = str_replace('../', '', $upload_path);
         } else {
             echo json_encode(['success' => false, 'message' => __('upload_error')]);
             exit;

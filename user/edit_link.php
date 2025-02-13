@@ -126,7 +126,7 @@ try {
             if ($current_link['image'] && file_exists('../' . $current_link['image'])) {
                 unlink('../' . $current_link['image']);
             }
-            $image_path = 'uploads/links/' . $new_filename;
+            $image_path = str_replace('../', '', $upload_path);
         } else {
             echo json_encode(['success' => false, 'message' => __('upload_error')]);
             exit;
@@ -164,7 +164,7 @@ try {
             if ($current_link['image'] && file_exists('../' . $current_link['image'])) {
                 unlink('../' . $current_link['image']);
             }
-            $image_path = 'uploads/links/' . $new_filename;
+            $image_path = str_replace('../', '', $upload_path);
         } else {
             echo json_encode(['success' => false, 'message' => __('upload_error')]);
             exit;
