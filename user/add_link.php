@@ -40,7 +40,50 @@ try {
 
     // Görsel yükleme işlemi
     $image_path = null;
-    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    
+    // URL ile görsel ekleme
+    if (!empty($_POST['image_url'])) {
+        $image_url = trim($_POST['image_url']);
+        
+        // URL'nin geçerli olup olmadığını kontrol et
+        if (!filter_var($image_url, FILTER_VALIDATE_URL)) {
+            echo json_encode(['success' => false, 'message' => __('invalid_image_url')]);
+            exit;
+        }
+        
+        // Görsel uzantısını kontrol et
+        $ext = strtolower(pathinfo($image_url, PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+        
+        if (!in_array($ext, $allowed)) {
+            echo json_encode(['success' => false, 'message' => __('image_type_error')]);
+            exit;
+        }
+        
+        // Uploads klasörünü kontrol et ve oluştur
+        $uploads_dir = '../uploads/links';
+        if (!file_exists($uploads_dir)) {
+            mkdir($uploads_dir, 0777, true);
+        }
+        
+        // Benzersiz dosya adı oluştur
+        $new_filename = uniqid('link_') . '.' . $ext;
+        $upload_path = $uploads_dir . '/' . $new_filename;
+        
+        // URL'den görseli indir
+        $image_content = @file_get_contents($image_url);
+        if ($image_content === false) {
+            echo json_encode(['success' => false, 'message' => __('image_download_error')]);
+            exit;
+        }
+        
+        // Görseli kaydet
+        if (file_put_contents($upload_path, $image_content)) {
+            $image_path = 'uploads/links/' . $new_filename;
+        }
+    }
+    // Dosya yükleme ile görsel ekleme
+    else if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $allowed = ['jpg', 'jpeg', 'png', 'gif'];
         $filename = $_FILES['image']['name'];
         $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
