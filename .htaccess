@@ -2,7 +2,10 @@ RewriteEngine On
 RewriteBase /
 
 # Admin, user ve assets klasörlerine erişime izin ver
-RewriteRule ^(admin|user|assets|uploads)($|/) - [L]
+RewriteCond %{REQUEST_URI} !^/user/dashboard\.php
+RewriteCond %{REQUEST_URI} !^/user/profile\.php
+RewriteCond %{REQUEST_URI} !^/user/settings\.php
+RewriteRule ^user/(.*)$ $1 [L]
 
 # PHP dosyalarına doğrudan erişime izin ver
 RewriteCond %{REQUEST_FILENAME} !\.php$
