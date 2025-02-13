@@ -84,11 +84,15 @@ try {
         $temp_file = tempnam(sys_get_temp_dir(), 'img_');
         file_put_contents($temp_file, $image_content);
         
-        // Görsel türünü kontrol et
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime_type = finfo_file($finfo, $temp_file);
-        finfo_close($finfo);
+        // Görsel türünü dosya içeriğine göre kontrol et
+        $image_info = getimagesize($temp_file);
+        if ($image_info === false) {
+            unlink($temp_file);
+            echo json_encode(['success' => false, 'message' => __('image_type_error')]);
+            exit;
+        }
         
+        $mime_type = $image_info['mime'];
         $allowed_types = [
             'image/jpeg',
             'image/jpg',
@@ -148,8 +152,13 @@ try {
     // Dosya yükleme ile görsel ekleme
     else if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         // Görsel türünü kontrol et
-        $mime_type = mime_content_type($_FILES['image']['tmp_name']);
+        $image_info = getimagesize($_FILES['image']['tmp_name']);
+        if ($image_info === false) {
+            echo json_encode(['success' => false, 'message' => __('image_type_error')]);
+            exit;
+        }
         
+        $mime_type = $image_info['mime'];
         $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
         
         if (!in_array($mime_type, $allowed_types)) {
@@ -161,19 +170,6 @@ try {
         if ($_FILES['image']['size'] > 2 * 1024 * 1024) {
             echo json_encode(['success' => false, 'message' => __('image_size_error')]);
             exit;
-        }
-
-        // Uzantıyı mime type'a göre belirle
-        $ext = 'jpg';
-        switch($mime_type) {
-            case 'image/png':
-                $ext = 'png';
-                break;
-            case 'image/gif':
-                $ext = 'gif';
-                break;
-            default:
-                $ext = 'jpg';
         }
 
         // Uploads klasörünü kontrol et ve oluştur
