@@ -150,7 +150,7 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <div>
                                             <i class="bi bi-grip-vertical drag-handle"></i>
                                             <?php if (!empty($link['image'])): ?>
-                                                <img src="<?php echo str_replace('user/', '', $link['image']); ?>" 
+                                                <img src="<?php echo 'https://linkde.net/' . str_replace('user/', '', $link['image']); ?>" 
                                                      alt="" 
                                                      class="link-image me-2" style="width: 24px; height: 24px; object-fit: cover; border-radius: 4px;">
                                             <?php else: ?>
@@ -431,7 +431,7 @@ $visits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div>
                     <i class="bi bi-grip-vertical drag-handle"></i>
                     <?php if (!empty($link['image'])): ?>
-                        <img src="<?php echo str_replace('user/', '', $link['image']); ?>" 
+                        <img src="<?php echo 'https://linkde.net/' . str_replace('user/', '', $link['image']); ?>" 
                              alt="" 
                              class="link-image me-2" style="width: 24px; height: 24px; object-fit: cover; border-radius: 4px;">
                     <?php else: ?>
