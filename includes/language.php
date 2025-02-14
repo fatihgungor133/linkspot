@@ -24,7 +24,7 @@ if (isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'tr'])) {
     exit;
 }
 
-// Metinleri getir
+// Dil metinlerini getir
 function get_language_strings($lang_code) {
     global $db;
     
@@ -35,10 +35,10 @@ function get_language_strings($lang_code) {
     $query = "SELECT ls.string_key, ls.string_value 
               FROM language_strings ls 
               JOIN languages l ON l.id = ls.language_id 
-              WHERE l.code = ?";
+              WHERE l.code = 'en'";
     
     $stmt = $db->prepare($query);
-    $stmt->execute([$lang_code]);
+    $stmt->execute();
     
     $strings = [];
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -53,37 +53,15 @@ function __($key) {
     static $strings = null;
     
     if ($strings === null) {
-        $strings = get_language_strings($_SESSION['language']);
+        $strings = get_language_strings('en');
     }
     
     return $strings[$key] ?? $key;
 }
 
-// Dil seçim menüsü HTML'i
+// Dil seçim menüsü HTML'i - artık kullanılmıyor
 function language_selector() {
-    global $db;
-    
-    if (!isset($db)) {
-        require dirname(__DIR__) . '/config/database.php';
-    }
-    
-    $query = "SELECT code, name FROM languages WHERE is_active = 1";
-    $stmt = $db->prepare($query);
-    $stmt->execute();
-    
-    $output = '<select class="form-select" onchange="window.location.href=\'?lang=\'+this.value">';
-    while ($lang = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $selected = (isset($_SESSION['language']) && $_SESSION['language'] == $lang['code']) ? 'selected' : '';
-        $output .= sprintf(
-            '<option value="%s" %s>%s</option>',
-            $lang['code'],
-            $selected,
-            $lang['name']
-        );
-    }
-    $output .= '</select>';
-    
-    return $output;
+    return '';
 }
 
 // Dil değiştirme işlemi
